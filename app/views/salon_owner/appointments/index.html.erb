@@ -1,0 +1,68 @@
+
+<div class="mx-auto max-w-5xl p-6">
+  <h1 class="mb-6 text-2xl font-bold">Salon Appointments</h1>
+
+  <% if @appointments.any? %>
+    <div class="space-y-4">
+      <% @appointments.each do |appointment| %>
+        <div class="rounded-lg border p-4">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-semibold">
+                <%= appointment.service.name %>
+              </h2>
+
+              <p class="mt-1">
+                Salon: <%= appointment.salon.name %>
+              </p>
+
+              <p>
+                Customer: <%= appointment.user.name %>
+              </p>
+
+              <p>
+                Date:
+                <%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
+              </p>
+
+              <p>
+                Price:
+                ₹<%= number_with_precision(appointment.service.price, precision: 2) %>
+              </p>
+
+              <p>
+                Status: <%= appointment.status.capitalize %>
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <%= link_to "View Details",
+                  salon_owner_appointment_path(appointment),
+                  class: "text-blue-600" %>
+
+              <% if appointment.status == "pending" %>
+                <%= button_to "Confirm",
+                    confirm_salon_owner_appointment_path(appointment),
+                    method: :patch,
+                    class: "rounded bg-green-600 px-3 py-1 text-white" %>
+              <% end %>
+
+              <% if %w[pending confirmed].include?(appointment.status) %>
+                <%= button_to "Cancel",
+                    cancel_salon_owner_appointment_path(appointment),
+                    method: :patch,
+                    form: { data: { turbo_confirm: "Cancel this appointment?" } },
+                    class: "rounded bg-red-600 px-3 py-1 text-white" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No appointments have been booked for your salons yet.</p>
+  <% end %>
+
+  <%= link_to "Back to Dashboard", salon_owner_dashboard_path,
+      class: "mt-6 inline-block text-blue-600" %>
+</div>

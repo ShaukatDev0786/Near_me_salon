@@ -1,0 +1,2 @@
+module SalonOwner::DashboardHelper
+end

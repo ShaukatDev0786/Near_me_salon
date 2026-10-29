@@ -1,0 +1,11 @@
+<div class="mx-auto max-w-4xl p-6">
+  <h1 class="text-3xl font-bold">Salon Owner Dashboard</h1>
+  
+  <p class="mt-2 text-gray-600">
+    Welcome, <%= current_user.name %>!
+  </p>
+
+  <p class="mt-4">
+    <%= link_to "Manage Appointments", salon_owner_appointments_path, class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+  </p>
+</div>

@@ -1,0 +1,25 @@
+
+<div class="mx-auto max-w-2xl p-6">
+  <h1 class="mb-6 text-2xl font-bold">Appointment Details</h1>
+
+  <p><strong>Salon:</strong> <%= @appointment.salon.name %></p>
+  <p class="mt-2"><strong>Service:</strong> <%= @appointment.service.name %></p>
+  <p class="mt-2"><strong>Price:</strong>
+    ₹<%= number_with_precision(@appointment.service.price, precision: 2) %>
+  </p>
+  <p class="mt-2"><strong>Duration:</strong>
+    <%= @appointment.service.duration %> minutes
+  </p>
+  <p class="mt-2"><strong>Date:</strong>
+    <%= @appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
+  </p>
+  <p class="mt-2"><strong>Status:</strong>
+    <%= @appointment.status.capitalize %>
+  </p>
+  <p class="mt-2"><strong>Notes:</strong>
+    <%= @appointment.notes.presence || "No notes" %>
+  </p>
+
+  <%= link_to "Back to My Appointments", appointments_path,
+      class: "mt-6 inline-block text-blue-600" %>
+</div>

@@ -1,0 +1,30 @@
+<div class="mx-auto max-w-4xl p-6">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-2xl font-bold">My Salons</h1>
+
+    <%= link_to "Add Salon", new_salon_path,
+        class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+  </div>
+
+  <% if @salons.any? %>
+    <% @salons.each do |salon| %>
+      <div class="mb-4 rounded border p-4">
+        <h2 class="text-xl font-semibold">
+          <%= link_to salon.name, salon_path(salon) %>
+        </h2>
+
+        <p><%= salon.city %> — <%= salon.pincode %></p>
+
+        <%= link_to "Edit", edit_salon_path(salon),
+            class: "mr-3 text-blue-600" %>
+
+        <%= button_to "Delete", salon_path(salon),
+            method: :delete,
+            form: { data: { turbo_confirm: "Delete this salon?" } },
+            class: "text-red-600" %>
+      </div>
+    <% end %>
+  <% else %>
+    <p>You have not added any salons yet.</p>
+  <% end %>
+</div>

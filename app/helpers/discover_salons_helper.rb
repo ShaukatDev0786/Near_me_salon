@@ -1,0 +1,2 @@
+module DiscoverSalonsHelper
+end

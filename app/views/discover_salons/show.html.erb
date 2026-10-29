@@ -1,0 +1,37 @@
+
+<div class="mx-auto max-w-3xl p-6">
+  <h1 class="text-3xl font-bold"><%= @salon.name %></h1>
+
+  <p class="mt-3"><%= @salon.description %></p>
+  <p class="mt-2">Phone: <%= @salon.phone %></p>
+  <p class="mt-2">Address: <%= @salon.address %></p>
+  <p class="mt-2">City: <%= @salon.city %></p>
+  <p class="mt-2">PIN Code: <%= @salon.pincode %></p>
+
+  <h2 class="mb-4 mt-8 text-2xl font-bold">Our Services</h2>
+
+  <% if @services.any? %>
+    <% @services.each do |service| %>
+      <div class="mb-4 rounded-lg border p-4">
+        <h3 class="text-lg font-semibold"><%= service.name %></h3>
+
+        <p class="mt-1 text-gray-600"><%= service.description %></p>
+
+        <p class="mt-2 font-medium">
+          Price: ₹<%= number_with_precision(service.price, precision: 2) %>
+        </p>
+
+        <p>Duration: <%= service.duration %> minutes</p>
+
+        <% if user_signed_in? && current_user.customer? %>
+          <%= link_to "Book This Service", new_salon_appointment_path(@salon, service_id: service.id), class: "mt-3 inline-block rounded bg-blue-600 px-4 py-2 text-white" %>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p>This salon has no active services listed yet.</p>
+  <% end %>
+
+  <%= link_to "Back to Search", search_salons_path,
+      class: "mt-4 inline-block text-blue-600" %>
+</div>

@@ -1,0 +1,2 @@
+module SalonOwner::AppointmentsHelper
+end

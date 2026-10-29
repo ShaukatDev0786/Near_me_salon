@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  salon: one
+  service: one
+  appointment_at: 2026-10-29 10:55:45
+  status: MyString
+  notes: MyText
+
+two:
+  user: two
+  salon: two
+  service: two
+  appointment_at: 2026-10-29 10:55:45
+  status: MyString
+  notes: MyText

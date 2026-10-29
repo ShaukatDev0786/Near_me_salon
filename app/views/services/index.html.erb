@@ -1,0 +1,47 @@
+<div class="mx-auto max-w-4xl p-6">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold">Services</h1>
+      <p class="text-gray-600"><%= @salon.name %></p>
+    </div>
+
+    <%= link_to "Add Service", new_salon_service_path(@salon),
+        class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+  </div>
+
+  <% if @services.any? %>
+    <% @services.each do |service| %>
+      <div class="mb-4 rounded border p-4">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-xl font-semibold"><%= service.name %></h2>
+            <p class="mt-1 text-gray-600"><%= service.description %></p>
+            <p class="mt-2">Price: ₹<%= number_with_precision(service.price, precision: 2) %></p>
+            <p>Duration: <%= service.duration %> minutes</p>
+
+            <p class="mt-1">
+              Availability:
+              <%= service.active? ? "Active" : "Inactive" %>
+            </p>
+          </div>
+
+          <div class="flex gap-3">
+            <%= link_to "Edit", edit_salon_service_path(@salon, service),
+                class: "text-blue-600" %>
+
+            <%= button_to "Delete",
+                salon_service_path(@salon, service),
+                method: :delete,
+                form: { data: { turbo_confirm: "Delete this service?" } },
+                class: "text-red-600" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p>No services added yet. Click Add Service to get started.</p>
+  <% end %>
+
+  <%= link_to "Back to My Salons", salons_path,
+      class: "mt-4 inline-block text-blue-600" %>
+</div>
