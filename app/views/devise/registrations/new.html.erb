@@ -1,39 +1,112 @@
-<h2>Sign up</h2>
+<div class="auth-page">
+  <div class="auth-card">
+    <p class="auth-brand">NearMe Salon</p>
+    <h1 class="auth-title">Create Your Account</h1>
+    <p class="auth-subtitle">Your next great salon experience starts here.</p>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :name, "Full Name" %>
-    <%= f.text_field :name, autocomplete: "name", required: true %>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <div class="field">
-    <%= f.label :phone, "Phone Number" %>
-    <%= f.telephone_field :phone, autocomplete: "tel" %>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+    <% if resource.errors.any? %>
+      <div class="auth-error" role="alert">
+        <ul>
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-  </div>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
+    <%= form_for(resource,
+        as: resource_name,
+        url: registration_path(resource_name)) do |f| %>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+      <div class="auth-signup-grid">
+        <div class="auth-field">
+          <%= f.label :name, class: "auth-label" %>
+          <div class="auth-input-wrap">
+            <svg class="auth-field-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+            </svg>
+            <%= f.text_field :name, autocomplete: "name",
+                placeholder: "Full name",
+                class: "auth-input auth-input-with-icon" %>
+          </div>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <div class="auth-field">
+          <%= f.label :phone, class: "auth-label" %>
+          <div class="auth-input-wrap">
+            <svg class="auth-field-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/>
+              <path d="M9 18h6"/>
+            </svg>
+            <%= f.telephone_field :phone, autocomplete: "tel",
+                placeholder: "Phone number",
+                class: "auth-input auth-input-with-icon" %>
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <%= f.label :email, class: "auth-label" %>
+          <div class="auth-input-wrap">
+            <svg class="auth-field-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="m3 7 9 6 9-6"/>
+            </svg>
+            <%= f.email_field :email, autocomplete: "email",
+                placeholder: "you@example.com",
+                class: "auth-input auth-input-with-icon" %>
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <%= f.label :password, class: "auth-label" %>
+          <div class="auth-input-wrap">
+            <svg class="auth-field-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"/>
+              <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            </svg>
+            <%= f.password_field :password, autocomplete: "new-password",
+                placeholder: "Create password",
+                class: "auth-input auth-input-with-icon" %>
+          </div>
+          <% if @minimum_password_length %>
+            <p class="mt-1 text-xs text-gray-500">
+              Minimum <%= @minimum_password_length %> characters
+            </p>
+          <% end %>
+        </div>
+
+        <div class="auth-field" style="grid-column: 1 / -1;">
+          <%= f.label :password_confirmation, "Confirm Password",
+              class: "auth-label" %>
+          <div class="auth-input-wrap">
+            <svg class="auth-field-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"/>
+              <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+              <path d="m9 15 2 2 4-4"/>
+            </svg>
+            <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                placeholder: "Confirm password",
+                class: "auth-input auth-input-with-icon" %>
+          </div>
+        </div>
+      </div>
+
+      <%= f.submit "Create Account", class: "auth-button" %>
+    <% end %>
+
+    <div class="auth-divider">or</div>
+
+    <div class="auth-footer">
+      Already have an account?
+      <%= link_to "Log in", new_session_path(resource_name),
+          class: "auth-link" %>
+    </div>
+  </div>
+</div>
