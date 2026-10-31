@@ -1,8 +1,41 @@
-<div class="mx-auto max-w-2xl p-6">
-  <h1 class="mb-6 text-2xl font-bold">Edit Salon</h1>
+<div class="min-h-screen bg-slate-50">
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-9">
+      <%= link_to salons_path,
+          class: "inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-200 rounded-md" do %>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to My Salons
+      <% end %>
 
-  <%= render "form", salon: @salon %>
+      <div class="mt-4">
+        <p class="text-sm font-semibold uppercase tracking-widest text-violet-600">Keep your profile up to date</p>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Edit Salon</h1>
+        <p class="mt-2 text-sm text-slate-500">Update your salon's contact information, address, and description.</p>
+      </div>
+    </div>
+  </section>
 
-  <%= link_to "Back to Salon", @salon,
-      class: "mt-4 inline-block text-blue-600" %>
+  <section class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="h-1.5 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500"></div>
+
+      <div class="p-5 sm:p-8">
+        <div class="mb-7 flex items-center gap-3 border-b border-slate-100 pb-5">
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L9 17l-4 1 1-4Z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Update Salon Information</h2>
+            <p class="mt-1 text-sm text-slate-500">Make changes and save when you're ready.</p>
+          </div>
+        </div>
+
+        <%= render "form", salon: @salon %>
+      </div>
+    </div>
+  </section>
 </div>

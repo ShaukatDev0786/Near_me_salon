@@ -1,30 +1,145 @@
-<div class="mx-auto max-w-4xl p-6">
-  <div class="mb-6 flex items-center justify-between">
-    <h1 class="text-2xl font-bold">My Salons</h1>
+<div class="min-h-screen bg-slate-50">
+  <!-- Page Header -->
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-widest text-violet-600">
+            Salon management
+          </p>
 
-    <%= link_to "Add Salon", new_salon_path,
-        class: "rounded bg-blue-600 px-4 py-2 text-white" %>
-  </div>
+          <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            My Salons
+          </h1>
 
-  <% if @salons.any? %>
-    <% @salons.each do |salon| %>
-      <div class="mb-4 rounded border p-4">
-        <h2 class="text-xl font-semibold">
-          <%= link_to salon.name, salon_path(salon) %>
-        </h2>
+          <p class="mt-2 text-sm leading-6 text-slate-500">
+            Manage your salon profiles, locations, and details in one place.
+          </p>
+        </div>
 
-        <p><%= salon.city %> — <%= salon.pincode %></p>
+        <%= link_to new_salon_path,
+            class: "inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-violet-200 transition duration-200 hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-300 active:translate-y-0 active:scale-[0.98]" do %>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m-7-7h14"/>
+          </svg>
+          Add Salon
+        <% end %>
+      </div>
+    </div>
+  </section>
 
-        <%= link_to "Edit", edit_salon_path(salon),
-            class: "mr-3 text-blue-600" %>
+  <!-- Salon List -->
+  <section class="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900">Your Salon Profiles</h2>
+        <p class="mt-1 text-sm text-slate-500">
+          View and update the salons you manage.
+        </p>
+      </div>
 
-        <%= button_to "Delete", salon_path(salon),
-            method: :delete,
-            form: { data: { turbo_confirm: "Delete this salon?" } },
-            class: "text-red-600" %>
+      <span class="inline-flex shrink-0 items-center rounded-full bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-700">
+        <%= pluralize(@salons.size, "salon") %>
+      </span>
+    </div>
+
+    <% if @salons.any? %>
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <% @salons.each do |salon| %>
+          <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg hover:shadow-violet-100/60">
+            <div class="h-1.5 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500"></div>
+
+            <div class="p-5 sm:p-6">
+              <!-- Salon Name and Icon -->
+              <div class="flex items-start gap-3">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 transition group-hover:bg-violet-100">
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 21h16M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1m-5 7v-4h2v4"/>
+                  </svg>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                  <h3 class="break-words text-lg font-bold text-slate-900 transition group-hover:text-violet-700">
+                    <%= salon.name %>
+                  </h3>
+
+                  <div class="mt-2 flex items-start gap-1.5 text-sm text-slate-500">
+                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="break-words"><%= salon.city %> — <%= salon.pincode %></span>
+                  </div>
+                </div>
+              </div>
+
+              <% if salon.description.present? %>
+                <p class="mt-4 line-clamp-2 text-sm leading-6 text-slate-500">
+                  <%= salon.description %>
+                </p>
+              <% else %>
+                <p class="mt-4 text-sm text-slate-400">
+                  Add a description to tell customers about your salon.
+                </p>
+              <% end %>
+
+              <!-- Location Information -->
+              <div class="mt-5 flex items-start gap-2 rounded-xl bg-slate-50 p-3.5">
+                <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>
+                </svg>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Address</p>
+                  <p class="mt-1 break-words text-sm text-slate-700"><%= salon.address %></p>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
+                <%= link_to edit_salon_path(salon),
+                    class: "inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-white px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:border-violet-600 hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-200 active:scale-[0.97]" do %>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L9 17l-4 1 1-4Z"/>
+                  </svg>
+                  Edit
+                <% end %>
+
+                <%= button_to salon_path(salon),
+                    method: :delete,
+                    form: { class: "w-full", data: { turbo_confirm: "Are you sure you want to delete this salon? This action cannot be undone." } },
+                    class: "inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:border-red-500 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-200 active:scale-[0.97] cursor-pointer" do %>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14M10 10v6m4-6v6"/>
+                  </svg>
+                  Delete
+                <% end %>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center sm:px-12">
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-violet-50 text-violet-600">
+          <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 21h16M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1m-5 7v-4h2v4"/>
+          </svg>
+        </div>
+
+        <h3 class="mt-6 text-xl font-bold text-slate-900">No salons added yet</h3>
+        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+          Get started by creating your first salon profile. Customers will be able to discover your salon and explore its services.
+        </p>
+
+        <%= link_to new_salon_path,
+            class: "mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-violet-200 transition hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-300 active:scale-[0.98]" do %>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m-7-7h14"/>
+          </svg>
+          Add Your First Salon
+        <% end %>
       </div>
     <% end %>
-  <% else %>
-    <p>You have not added any salons yet.</p>
-  <% end %>
+  </section>
 </div>

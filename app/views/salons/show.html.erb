@@ -1,20 +1,164 @@
-<div class="mx-auto max-w-2xl p-6">
-  <h1 class="text-3xl font-bold"><%= @salon.name %></h1>
+<div class="min-h-screen bg-slate-50">
+  <!-- Page heading -->
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10">
+      <%= link_to salons_path,
+          class: "inline-flex items-center gap-2 rounded-md text-sm font-semibold text-slate-500 transition hover:text-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-200" do %>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to My Salons
+      <% end %>
 
-  <p class="mt-3"><%= @salon.description %></p>
-  <p class="mt-2">Phone: <%= @salon.phone %></p>
-  <p class="mt-2">Address: <%= @salon.address %></p>
-  <p class="mt-2">City: <%= @salon.city %></p>
-  <p class="mt-2">PIN Code: <%= @salon.pincode %></p>
+      <div class="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-widest text-violet-600">
+            Salon profile
+          </p>
+          <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            <%= @salon.name %>
+          </h1>
+          <p class="mt-2 text-sm text-slate-500">
+            Manage your salon information and services.
+          </p>
+        </div>
 
-  <div class="mt-6 flex gap-4">
-    <%= link_to "Edit", edit_salon_path(@salon),
-        class: "text-blue-600" %>
+        <%= link_to edit_salon_path(@salon),
+            class: "inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-violet-200 transition hover:-translate-y-0.5 hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-300 active:translate-y-0 active:scale-[0.98]" do %>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L9 17l-4 1 1-4Z"/>
+          </svg>
+          Edit Salon
+        <% end %>
+      </div>
+    </div>
+  </section>
 
-    <%= link_to "Back to My Salons", salons_path,
-        class: "text-blue-600" %>
-  </div>
+  <!-- Salon details -->
+  <main class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10">
+    <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+      <!-- Main information card -->
+      <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-2">
+        <div class="h-1.5 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500"></div>
 
-  <%= link_to "Manage Services", salon_services_path(@salon), class: "text-blue-600" %>
+        <div class="p-5 sm:p-7">
+          <div class="flex items-start gap-4 border-b border-slate-100 pb-6">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
+              <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 21h16M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1m-5 7v-4h2v4"/>
+              </svg>
+            </div>
 
+            <div class="min-w-0">
+              <p class="text-sm text-slate-500">Your salon</p>
+              <h2 class="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">
+                <%= @salon.name %>
+              </h2>
+              <p class="mt-1 text-sm text-slate-500">
+                <%= @salon.city %> · PIN <%= @salon.pincode %>
+              </p>
+            </div>
+          </div>
+
+          <div class="py-6">
+            <h3 class="text-base font-bold text-slate-900">About the salon</h3>
+            <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">
+              <%= @salon.description.presence || "No description has been added yet." %>
+            </p>
+          </div>
+
+          <div class="border-t border-slate-100 pt-5">
+            <h3 class="text-base font-bold text-slate-900">Contact & location</h3>
+
+            <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3l2 5-2 1.5a12 12 0 005.5 5.5L15 13l5 2v3a2 2 0 01-2 2C10 20 4 14 3 6V5z"/>
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Phone</p>
+                  <p class="mt-1 break-words text-sm font-semibold text-slate-800">
+                    <%= @salon.phone.presence || "Not provided" %>
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Address</p>
+                  <p class="mt-1 break-words text-sm font-semibold leading-5 text-slate-800">
+                    <%= @salon.address %>
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/>
+                    <circle cx="12" cy="10" r="2.5" stroke-width="1.8"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">City</p>
+                  <p class="mt-1 text-sm font-semibold text-slate-800"><%= @salon.city %></p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 10h16M4 14h10M4 18h7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">PIN Code</p>
+                  <p class="mt-1 text-sm font-semibold text-slate-800"><%= @salon.pincode %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick actions card -->
+      <aside class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <h3 class="text-base font-bold text-slate-900">Quick actions</h3>
+        <p class="mt-1 text-sm leading-5 text-slate-500">
+          Manage your salon and the services you offer.
+        </p>
+
+        <div class="mt-5 space-y-3">
+          <%= link_to edit_salon_path(@salon),
+              class: "flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-200 active:scale-[0.98]" do %>
+            <span>Edit salon details</span>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 18l6-6-6-6"/>
+            </svg>
+          <% end %>
+
+          <%= link_to salon_services_path(@salon),
+              class: "flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-200 active:scale-[0.98]" do %>
+            <span>Manage services</span>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 18l6-6-6-6"/>
+            </svg>
+          <% end %>
+
+          <%= link_to salons_path,
+              class: "flex w-full items-center justify-center rounded-xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300 active:scale-[0.98]" do %>
+            Back to My Salons
+          <% end %>
+        </div>
+      </aside>
+    </div>
+  </main>
 </div>

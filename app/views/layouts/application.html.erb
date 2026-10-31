@@ -12,19 +12,9 @@
   </head>
 
   <body class="min-h-screen scroll-smooth bg-gray-50 text-gray-900">
+
     <%= render "shared/navbar" %>
-
-    <% if notice.present? %>
-      <div class="mx-auto mt-4 max-w-7xl rounded-lg bg-green-100 px-6 py-3 text-green-800">
-        <%= notice %>
-      </div>
-    <% end %>
-
-    <% if alert.present? %>
-      <div class="mx-auto mt-4 max-w-7xl rounded-lg bg-red-100 px-6 py-3 text-red-800">
-        <%= alert %>
-      </div>
-    <% end %>
+    <%= render "shared/toast" %>
 
     <main>
       <%= yield %>

@@ -1,68 +1,93 @@
+<div class="salon-appointments-page">
+  <div class="salon-appointments-container">
+    <h1 class="salon-appointments-heading">Salon Appointments</h1>
 
-<div class="mx-auto max-w-5xl p-6">
-  <h1 class="mb-6 text-2xl font-bold">Salon Appointments</h1>
+    <p class="salon-appointments-subtitle">
+      Review bookings, check appointment details, and manage cancellations.
+    </p>
 
-  <% if @appointments.any? %>
-    <div class="space-y-4">
+    <% if @appointments.any? %>
       <% @appointments.each do |appointment| %>
-        <div class="rounded-lg border p-4">
-          <div class="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h2 class="text-xl font-semibold">
+        <article class="salon-appointment-card">
+          <div class="salon-appointment-top">
+            <div class="salon-appointment-main">
+              <h2 class="salon-appointment-service">
                 <%= appointment.service.name %>
               </h2>
 
-              <p class="mt-1">
-                Salon: <%= appointment.salon.name %>
-              </p>
+              <div>
+                <% status_class = case appointment.status.to_s.downcase
+                   when "confirmed" then "salon-status-confirmed"
+                   when "cancelled" then "salon-status-cancelled"
+                   when "completed" then "salon-status-completed"
+                   else "salon-status-pending"
+                   end %>
 
-              <p>
-                Customer: <%= appointment.user.name %>
-              </p>
-
-              <p>
-                Date:
-                <%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
-              </p>
-
-              <p>
-                Price:
-                ₹<%= number_with_precision(appointment.service.price, precision: 2) %>
-              </p>
-
-              <p>
-                Status: <%= appointment.status.capitalize %>
-              </p>
+                <span class="salon-appointment-status <%= status_class %>">
+                  <%= appointment.status.to_s.humanize %>
+                </span>
+              </div>
             </div>
 
-            <div class="flex flex-wrap gap-3">
+            <div class="salon-appointment-actions">
               <%= link_to "View Details",
-                  salon_owner_appointment_path(appointment),
-                  class: "text-blue-600" %>
+                appointment_path(appointment),
+                class: "salon-appointment-button salon-appointment-view" %>
 
-              <% if appointment.status == "pending" %>
-                <%= button_to "Confirm",
-                    confirm_salon_owner_appointment_path(appointment),
-                    method: :patch,
-                    class: "rounded bg-green-600 px-3 py-1 text-white" %>
-              <% end %>
-
-              <% if %w[pending confirmed].include?(appointment.status) %>
+              <% if %w[pending confirmed].include?(appointment.status.to_s) %>
                 <%= button_to "Cancel",
-                    cancel_salon_owner_appointment_path(appointment),
-                    method: :patch,
-                    form: { data: { turbo_confirm: "Cancel this appointment?" } },
-                    class: "rounded bg-red-600 px-3 py-1 text-white" %>
+                  cancel_appointment_path(appointment),
+                  method: :patch,
+                  class: "salon-appointment-button salon-appointment-cancel",
+                  form: {
+                    data: {
+                      turbo_confirm: "Are you sure you want to cancel this appointment?"
+                    }
+                  } %>
               <% end %>
             </div>
           </div>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <p>No appointments have been booked for your salons yet.</p>
-  <% end %>
 
-  <%= link_to "Back to Dashboard", salon_owner_dashboard_path,
-      class: "mt-6 inline-block text-blue-600" %>
+          <div class="salon-appointment-info">
+            <div class="salon-appointment-info-item">
+              <span class="salon-appointment-label">Salon</span>
+              <div class="salon-appointment-value">
+                <%= appointment.salon.name %>
+              </div>
+            </div>
+
+            <div class="salon-appointment-info-item">
+              <span class="salon-appointment-label">Customer</span>
+              <div class="salon-appointment-value">
+                <%= appointment.user.email %>
+              </div>
+            </div>
+
+            <div class="salon-appointment-info-item">
+              <span class="salon-appointment-label">Date &amp; Time</span>
+              <div class="salon-appointment-value">
+                <%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
+              </div>
+            </div>
+
+            <div class="salon-appointment-info-item">
+              <span class="salon-appointment-label">Price</span>
+              <div class="salon-appointment-value">
+                <%= number_to_currency(appointment.service.price, unit: "₹") %>
+              </div>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="salon-appointments-empty">
+        <h2>No appointments yet</h2>
+        <p>New bookings for your salon will appear here.</p>
+      </div>
+    <% end %>
+
+    <%= link_to "Back to Dashboard",
+      salon_owner_dashboard_path,
+      class: "salon-appointments-back" %>
+  </div>
 </div>
