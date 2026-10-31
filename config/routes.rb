@@ -56,6 +56,8 @@ Rails.application.routes.draw do
       member do
         patch :confirm
         patch :cancel
+        patch :update_attendance
+        patch :record_payment
       end
     end
   end
