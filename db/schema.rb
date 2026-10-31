@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_29_052545) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_075945) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_29_052545) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "approval_status", default: "approved", null: false
+    t.string "attendance_status", default: "not_marked", null: false
+    t.string "payment_status", default: "unpaid", null: false
+    t.string "payment_method"
+    t.datetime "paid_at"
+    t.datetime "admin_reviewed_at"
+    t.text "admin_notes"
+    t.index ["approval_status"], name: "index_appointments_on_approval_status"
+    t.index ["attendance_status"], name: "index_appointments_on_attendance_status"
+    t.index ["payment_status"], name: "index_appointments_on_payment_status"
     t.index ["salon_id"], name: "index_appointments_on_salon_id"
     t.index ["service_id"], name: "index_appointments_on_service_id"
     t.index ["user_id"], name: "index_appointments_on_user_id"
