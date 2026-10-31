@@ -1,47 +1,77 @@
-<div class="mx-auto max-w-4xl p-6">
-  <div class="mb-6 flex items-center justify-between">
-    <div>
-      <h1 class="text-2xl font-bold">Services</h1>
-      <p class="text-gray-600"><%= @salon.name %></p>
+<div class="services-page">
+  <div class="services-container">
+    <div class="services-list-header">
+      <div>
+        <h1 class="services-heading">Services</h1>
+        <p class="services-subheading">
+          <%= @salon.name %>
+        </p>
+      </div>
+
+      <%= link_to "Add Service",
+        new_salon_service_path(@salon),
+        class: "services-button" %>
     </div>
 
-    <%= link_to "Add Service", new_salon_service_path(@salon),
-        class: "rounded bg-blue-600 px-4 py-2 text-white" %>
-  </div>
+    <% if @services.any? %>
+      <% @services.each do |service| %>
+        <article class="services-card">
+          <div class="services-list-header">
+            <div>
+              <h2 class="services-card-title"><%= service.name %></h2>
 
-  <% if @services.any? %>
-    <% @services.each do |service| %>
-      <div class="mb-4 rounded border p-4">
-        <div class="flex items-start justify-between">
-          <div>
-            <h2 class="text-xl font-semibold"><%= service.name %></h2>
-            <p class="mt-1 text-gray-600"><%= service.description %></p>
-            <p class="mt-2">Price: ₹<%= number_with_precision(service.price, precision: 2) %></p>
-            <p>Duration: <%= service.duration %> minutes</p>
+              <% if service.description.present? %>
+                <p class="services-card-description">
+                  <%= service.description %>
+                </p>
+              <% end %>
+            </div>
 
-            <p class="mt-1">
-              Availability:
-              <%= service.active? ? "Active" : "Inactive" %>
-            </p>
-          </div>
+            <div class="services-card-actions">
+              <%= link_to "Edit",
+                edit_salon_service_path(@salon, service),
+                class: "services-link" %>
 
-          <div class="flex gap-3">
-            <%= link_to "Edit", edit_salon_service_path(@salon, service),
-                class: "text-blue-600" %>
-
-            <%= button_to "Delete",
+              <%= link_to "Delete",
                 salon_service_path(@salon, service),
-                method: :delete,
-                form: { data: { turbo_confirm: "Delete this service?" } },
-                class: "text-red-600" %>
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: "Are you sure you want to delete this service?"
+                },
+                class: "services-danger-link" %>
+            </div>
           </div>
-        </div>
+
+          <div class="services-card-details">
+            <span><strong>Price:</strong> <%= number_to_currency(service.price, unit: "₹") %></span>
+            <span><strong>Duration:</strong> <%= service.duration %> minutes</span>
+
+            <span>
+              <strong>Availability:</strong>
+              <% if service.active? %>
+                <span class="services-status services-status-active">Active</span>
+              <% else %>
+                <span class="services-status services-status-inactive">Inactive</span>
+              <% end %>
+            </span>
+          </div>
+        </article>
+      <% end %>
+    <% else %>
+      <div class="services-form-card">
+        <h2 class="services-card-title">No services added yet</h2>
+        <p class="services-card-description">
+          Add your first service so customers can see what your salon offers.
+        </p>
+
+        <%= link_to "Add Your First Service",
+          new_salon_service_path(@salon),
+          class: "services-button" %>
       </div>
     <% end %>
-  <% else %>
-    <p>No services added yet. Click Add Service to get started.</p>
-  <% end %>
 
-  <%= link_to "Back to My Salons", salons_path,
-      class: "mt-4 inline-block text-blue-600" %>
+    <%= link_to "Back to My Salons",
+      salons_path,
+      class: "services-link services-back-link" %>
+  </div>
 </div>

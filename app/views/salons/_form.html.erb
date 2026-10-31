@@ -1,8 +1,10 @@
-<%= form_with model: salon, class: "space-y-4" do |form| %>
+<%= form_with(model: salon, class: "space-y-5") do |form| %>
   <% if salon.errors.any? %>
-    <div class="rounded border border-red-300 p-3 text-red-700">
-      <h2>Please correct these errors:</h2>
-      <ul class="list-disc pl-5">
+    <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="alert">
+      <h3 class="font-bold">
+        Please correct <%= pluralize(salon.errors.count, "error") %> before continuing.
+      </h3>
+      <ul class="mt-2 list-inside list-disc space-y-1">
         <% salon.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -11,40 +13,82 @@
   <% end %>
 
   <div>
-    <%= form.label :name, "Salon Name" %>
-    <%= form.text_field :name, required: true,
-        class: "w-full rounded border p-2" %>
+    <%= form.label :name, "Salon Name", class: "mb-2 block text-sm font-semibold text-slate-700" %>
+    <div class="relative">
+      <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 21h16M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1m-5 7v-4h2v4"/>
+      </svg>
+      <%= form.text_field :name,
+          placeholder: "e.g. NearMe Premium Salon",
+          required: true,
+          class: "block w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    </div>
   </div>
 
   <div>
-    <%= form.label :description %>
+    <%= form.label :description, "Description", class: "mb-2 block text-sm font-semibold text-slate-700" %>
     <%= form.text_area :description,
-        class: "w-full rounded border p-2" %>
+        rows: 3,
+        placeholder: "Tell customers about your salon and the experience you offer...",
+        class: "block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    <p class="mt-1.5 text-xs text-slate-500">A short description helps customers understand your salon.</p>
   </div>
 
   <div>
-    <%= form.label :phone, "Contact Number" %>
-    <%= form.telephone_field :phone, required: true,
-        class: "w-full rounded border p-2" %>
+    <%= form.label :phone, "Contact Number", class: "mb-2 block text-sm font-semibold text-slate-700" %>
+    <div class="relative">
+      <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3l2 5-2 1.5a12 12 0 005.5 5.5L15 13l5 2v3a2 2 0 01-2 2C10 20 4 14 3 6V5z"/>
+      </svg>
+      <%= form.telephone_field :phone,
+          placeholder: "Enter your contact number",
+          class: "block w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    </div>
   </div>
 
   <div>
-    <%= form.label :address %>
-    <%= form.text_field :address, required: true,
-        class: "w-full rounded border p-2" %>
+    <%= form.label :address, "Address", class: "mb-2 block text-sm font-semibold text-slate-700" %>
+    <div class="relative">
+      <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      <%= form.text_field :address,
+          placeholder: "Street, area, or locality",
+          required: true,
+          class: "block w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :city %>
-    <%= form.text_field :city, required: true,
-        class: "w-full rounded border p-2" %>
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <div>
+      <%= form.label :city, "City", class: "mb-2 block text-sm font-semibold text-slate-700" %>
+      <%= form.text_field :city,
+          placeholder: "e.g. Lucknow",
+          required: true,
+          class: "block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    </div>
+
+    <div>
+      <%= form.label :pincode, "PIN Code", class: "mb-2 block text-sm font-semibold text-slate-700" %>
+      <%= form.text_field :pincode,
+          placeholder: "e.g. 226001",
+          required: true,
+          inputmode: "numeric",
+          class: "block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :pincode, "PIN Code" %>
-    <%= form.text_field :pincode, required: true,
-        maxlength: 6, class: "w-full rounded border p-2" %>
-  </div>
+  <div class="flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row">
+    <%= form.button type: "submit",
+        class: "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-violet-200 transition hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-violet-300 active:translate-y-0 active:scale-[0.98] sm:w-auto" do %>
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      <%= salon.persisted? ? "Update Salon" : "Create Salon" %>
+    <% end %>
 
-  <%= form.submit class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+    <%= link_to "Cancel", salons_path,
+        class: "inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200 active:scale-[0.98] sm:w-auto" %>
+  </div>
 <% end %>

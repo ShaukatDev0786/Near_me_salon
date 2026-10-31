@@ -1,43 +1,54 @@
-<%= form_with model: [@salon, service], class: "space-y-4" do |form| %>
-  <% if service.errors.any? %>
-    <div class="rounded border border-red-300 p-3 text-red-700">
-      <h2>Please correct these errors:</h2>
-      <ul class="list-disc pl-5">
-        <% service.errors.full_messages.each do |message| %>
+<%= form_with(model: [@salon, @service]) do |form| %>
+  <% if @service.errors.any? %>
+    <div class="services-card">
+      <h3 class="services-card-title">
+        Please correct the following errors:
+      </h3>
+
+      <ul>
+        <% @service.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, "Service Name" %>
-    <%= form.text_field :name, required: true,
-        class: "w-full rounded border p-2" %>
+  <div class="services-field">
+    <%= form.label :name, "Service Name", class: "services-label" %>
+    <%= form.text_field :name, class: "services-input", required: true %>
   </div>
 
-  <div>
-    <%= form.label :description %>
-    <%= form.text_area :description,
-        class: "w-full rounded border p-2" %>
+  <div class="services-field">
+    <%= form.label :description, "Description", class: "services-label" %>
+    <%= form.text_area :description, class: "services-input", rows: 3 %>
   </div>
 
-  <div>
-    <%= form.label :price, "Price (₹)" %>
-    <%= form.number_field :price, required: true, min: 0,
-        step: "0.01", class: "w-full rounded border p-2" %>
+  <div class="services-field">
+    <%= form.label :price, "Price (₹)", class: "services-label" %>
+    <%= form.number_field :price, class: "services-input",
+          min: 0, step: "0.01", required: true %>
   </div>
 
-  <div>
-    <%= form.label :duration, "Duration (minutes)" %>
-    <%= form.number_field :duration, required: true, min: 1,
-        step: 1, class: "w-full rounded border p-2" %>
+  <div class="services-field">
+    <%= form.label :duration, "Duration (minutes)", class: "services-label" %>
+    <%= form.number_field :duration, class: "services-input",
+          min: 1, step: 1, required: true %>
   </div>
 
-  <div>
+  <div class="services-checkbox-row">
+    <%= form.check_box :active, class: "services-checkbox" %>
     <%= form.label :active, "Available for booking" %>
-    <%= form.check_box :active %>
   </div>
 
-  <%= form.submit class: "rounded bg-blue-600 px-4 py-2 text-white" %>
+  <div class="services-actions">
+    <%= form.submit(
+      @service.persisted? ? "Update Service" : "Create Service",
+      class: "services-button"
+    ) %>
+
+    <%= link_to "Back to Services",
+      salon_services_path(@salon),
+      class: "services-link"
+    %>
+  </div>
 <% end %>

@@ -1,0 +1,276 @@
+/* ========================================
+   NearMe Salon - Services Pages
+   ======================================== */
+
+.services-page {
+  min-height: calc(100vh - 74px);
+  padding: 36px 20px 56px;
+  background: #f8fafc;
+  color: #172033;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.services-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.services-form-container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.services-heading {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.services-subheading {
+  margin: 0 0 24px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.services-card {
+  margin-bottom: 18px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.services-card:hover {
+  border-color: #c4b5fd;
+  box-shadow: 0 7px 20px rgba(91, 63, 230, 0.08);
+  transform: translateY(-1px);
+}
+
+.services-card-title {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.services-card-description {
+  margin: 0 0 14px;
+  color: #64748b;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.services-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 14px;
+  color: #334155;
+  font-size: 15px;
+}
+
+.services-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.services-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.services-form-card {
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.services-field {
+  margin-bottom: 20px;
+}
+
+.services-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.services-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 13px;
+  color: #172033;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.services-input:focus {
+  outline: none;
+  border-color: #6545ed;
+  box-shadow: 0 0 0 3px rgba(101, 69, 237, 0.14);
+}
+
+textarea.services-input {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.services-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 24px;
+  color: #334155;
+  font-size: 15px;
+}
+
+.services-checkbox {
+  width: 17px;
+  height: 17px;
+  accent-color: #6545ed;
+}
+
+.services-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.services-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 20px;
+  color: #ffffff;
+  background: #6545ed;
+  border: 1px solid #6545ed;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.services-button:hover {
+  background: #5032d4;
+  border-color: #5032d4;
+}
+
+.services-button:active {
+  transform: scale(0.98);
+}
+
+.services-button:focus-visible,
+.services-link:focus-visible,
+.services-danger-link:focus-visible {
+  outline: 3px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+.services-button:focus {
+  box-shadow: 0 0 0 4px rgba(101, 69, 237, 0.18);
+}
+
+.services-link {
+  color: #6043df;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.services-link:hover {
+  color: #4526c4;
+  text-decoration: underline;
+}
+
+.services-danger-link {
+  color: #dc2626;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.services-danger-link:hover {
+  color: #b91c1c;
+  text-decoration: underline;
+}
+
+.services-back-link {
+  display: inline-block;
+  margin-top: 12px;
+}
+
+.services-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.services-status-active {
+  color: #047857;
+  background: #ecfdf5;
+}
+
+.services-status-inactive {
+  color: #b45309;
+  background: #fffbeb;
+}
+
+@media (max-width: 640px) {
+  .services-page {
+    padding: 24px 14px 40px;
+  }
+
+  .services-heading {
+    font-size: 24px;
+  }
+
+  .services-list-header {
+    align-items: flex-start;
+  }
+
+  .services-card,
+  .services-form-card {
+    padding: 20px;
+  }
+
+  .services-card-actions {
+    flex-wrap: wrap;
+  }
+
+  .services-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .services-actions .services-button {
+    width: 100%;
+  }
+}

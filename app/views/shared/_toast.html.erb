@@ -1,0 +1,66 @@
+<% if flash.any? %>
+  <div
+    id="toast-container"
+    class="pointer-events-none fixed left-1/2 top-24 z-[9999] flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 flex-col gap-3"
+    data-controller="toast"
+  >
+    <% flash.each do |type, message| %>
+      <% next if message.blank? %>
+
+      <% is_error = %w[alert error].include?(type.to_s) %>
+
+      <div
+        class="toast-message pointer-events-auto relative overflow-hidden rounded-xl border bg-white shadow-2xl shadow-slate-900/10
+          <%= is_error ? 'border-red-200' : 'border-emerald-200' %>"
+        role="<%= is_error ? 'alert' : 'status' %>"
+        data-toast-target="message"
+      >
+        <div class="flex items-start gap-3 p-4">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full
+            <%= is_error ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600' %>">
+            <% if is_error %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            <% else %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 13l4 4L19 7" />
+              </svg>
+            <% end %>
+          </div>
+
+          <div class="min-w-0 flex-1 pt-1">
+            <p class="text-sm font-bold <%= is_error ? 'text-red-800' : 'text-slate-900' %>">
+              <%= is_error ? "Please sign in" : "Notification" %>
+            </p>
+
+            <p class="mt-1 break-words text-sm leading-5 text-slate-600">
+              <%= message %>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="ml-1 rounded-md p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Dismiss notification"
+            data-action="toast#dismiss"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="h-1 w-full bg-slate-100">
+          <div
+            class="toast-progress h-full <%= is_error ? 'bg-red-500' : 'bg-emerald-500' %>"
+            data-toast-target="progress"
+          ></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

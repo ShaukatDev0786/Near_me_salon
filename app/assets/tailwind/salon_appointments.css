@@ -1,0 +1,266 @@
+/* ========================================
+   NearMe Salon - Salon Appointments
+   ======================================== */
+
+.salon-appointments-page {
+  min-height: calc(100vh - 74px);
+  padding: 36px 20px 56px;
+  background: #f8fafc;
+  color: #172033;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.salon-appointments-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.salon-appointments-heading {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.salon-appointments-subtitle {
+  margin: 0 0 26px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.salon-appointment-card {
+  margin-bottom: 18px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.salon-appointment-card:hover {
+  border-color: #c4b5fd;
+  box-shadow: 0 8px 22px rgba(91, 63, 230, 0.07);
+  transform: translateY(-1px);
+}
+
+.salon-appointment-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.salon-appointment-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.salon-appointment-service {
+  margin: 0 0 14px;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.salon-appointment-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 24px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #eef2f7;
+}
+
+.salon-appointment-info-item {
+  min-width: 0;
+}
+
+.salon-appointment-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.salon-appointment-value {
+  color: #334155;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.salon-appointment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.salon-appointment-status::before {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  border-radius: 50%;
+  content: "";
+}
+
+.salon-status-pending {
+  color: #a16207;
+  background: #fef9c3;
+}
+
+.salon-status-confirmed {
+  color: #047857;
+  background: #d1fae5;
+}
+
+.salon-status-cancelled {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.salon-status-completed {
+  color: #4338ca;
+  background: #e0e7ff;
+}
+
+.salon-appointment-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.salon-appointment-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.salon-appointment-button:active {
+  transform: scale(0.98);
+}
+
+.salon-appointment-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(101, 69, 237, 0.16);
+}
+
+.salon-appointment-button:focus-visible {
+  outline: 3px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+.salon-appointment-view {
+  color: #6043df;
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.salon-appointment-view:hover {
+  background: #ede9fe;
+}
+
+.salon-appointment-cancel {
+  color: #ffffff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.salon-appointment-cancel:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.salon-appointments-empty {
+  padding: 40px 24px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.salon-appointments-empty h2 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.salon-appointments-empty p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.salon-appointments-back {
+  display: inline-block;
+  margin-top: 14px;
+  color: #6043df;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.salon-appointments-back:hover {
+  color: #4526c4;
+  text-decoration: underline;
+}
+
+.salon-appointments-back:focus-visible {
+  outline: 3px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .salon-appointments-page {
+    padding: 24px 14px 40px;
+  }
+
+  .salon-appointments-heading {
+    font-size: 24px;
+  }
+
+  .salon-appointment-card {
+    padding: 18px;
+  }
+
+  .salon-appointment-top {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .salon-appointment-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .salon-appointment-info {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
