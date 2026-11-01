@@ -2,169 +2,245 @@
   <div class="mx-auto max-w-7xl">
 
     <!-- Dashboard Header -->
-    <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+    <div class="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
       <div>
-        <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-violet-600">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-violet-600">
           Administration
         </p>
+
         <h1 class="text-3xl font-bold tracking-tight text-slate-900">
           Admin Dashboard
         </h1>
+
         <p class="mt-2 text-sm text-slate-500">
           Welcome, <%= current_user.email %>! Here's your platform overview.
         </p>
       </div>
 
-      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-        <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
-          Dashboard Status
-        </p>
-        <p class="mt-1 flex items-center gap-2 font-semibold text-emerald-700">
-          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-          System Active
-        </p>
+      <div class="flex flex-wrap items-center gap-3">
+        <%= link_to admin_salons_path(approval_status: "pending"),
+          class: "inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700" do %>
+          <span>Review Pending Salons</span>
+          <% if @pending_salons.positive? %>
+            <span class="rounded-full bg-white/20 px-2 py-0.5 text-xs">
+              <%= @pending_salons %>
+            </span>
+          <% end %>
+        <% end %>
+
+        <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Dashboard Status
+          </p>
+          <p class="mt-1 flex items-center gap-2 text-sm font-semibold text-emerald-700">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Active
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- Action Required -->
+    <% if @pending_salons.positive? %>
+      <div class="mb-8 flex flex-col gap-4 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-start gap-3">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+            !
+          </div>
+          <div>
+            <h2 class="font-semibold text-amber-900">
+              Salon registrations need your attention
+            </h2>
+            <p class="mt-1 text-sm text-amber-800">
+              <%= pluralize(@pending_salons, "salon") %> waiting for admin review.
+              Review each registration before making it publicly available.
+            </p>
+          </div>
+        </div>
+
+        <%= link_to "Review Salons",
+          admin_salons_path(approval_status: "pending"),
+          class: "inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-amber-300 bg-white px-4 text-sm font-semibold text-amber-900 transition hover:bg-amber-100" %>
+      </div>
+    <% end %>
+
+    <!-- Main Statistics -->
     <div class="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      <!-- Total Users -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-500">Total Users</p>
-            <p class="mt-3 text-3xl font-bold text-slate-900">
-              <%= User.count %>
+            <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+              <%= @total_users %>
             </p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-xl text-violet-700">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-xl">
             👥
           </div>
         </div>
-        <p class="mt-4 text-sm text-slate-500">Registered platform users</p>
+        <p class="mt-3 text-sm text-slate-500">
+          All registered platform accounts
+        </p>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      <!-- Total Salons -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-500">Total Salons</p>
-            <p class="mt-3 text-3xl font-bold text-slate-900">
-              <%= Salon.count %>
+            <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+              <%= @total_salons %>
             </p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-xl">
             🏪
           </div>
         </div>
-        <p class="mt-4 text-sm text-slate-500">Salons listed on the platform</p>
+        <p class="mt-3 text-sm text-slate-500">
+          All registered salon listings
+        </p>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      <!-- Pending Approvals -->
+      <%= link_to admin_salons_path(approval_status: "pending"),
+        class: "block rounded-2xl border border-amber-200 bg-white p-5 shadow-sm transition hover:border-amber-300 hover:shadow-md" do %>
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-500">Total Services</p>
-            <p class="mt-3 text-3xl font-bold text-slate-900">
-              <%= Service.count %>
+            <p class="text-sm font-medium text-slate-500">Pending Approvals</p>
+            <p class="mt-3 text-3xl font-bold tracking-tight <%= @pending_salons.positive? ? 'text-amber-600' : 'text-slate-900' %>">
+              <%= @pending_salons %>
             </p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-fuchsia-100 text-xl text-fuchsia-700">
-            ✂️
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-xl">
+            ⏳
           </div>
         </div>
-        <p class="mt-4 text-sm text-slate-500">Services offered by salons</p>
-      </div>
+        <p class="mt-3 text-sm text-slate-500">
+          Salons awaiting admin review
+        </p>
+      <% end %>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      <!-- Total Appointments -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-500">Appointments</p>
-            <p class="mt-3 text-3xl font-bold text-slate-900">
-              <%= Appointment.count %>
+            <p class="text-sm font-medium text-slate-500">Total Appointments</p>
+            <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+              <%= @total_appointments %>
             </p>
           </div>
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-xl text-emerald-700">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-xl">
             📅
           </div>
         </div>
-        <p class="mt-4 text-sm text-slate-500">Total bookings created</p>
+        <p class="mt-3 text-sm text-slate-500">
+          <%= @appointments_today %> scheduled for today
+        </p>
       </div>
 
     </div>
 
-    <!-- Management Section -->
+    <!-- Platform Management -->
     <div class="mb-4">
       <h2 class="text-xl font-bold text-slate-900">Platform Management</h2>
       <p class="mt-1 text-sm text-slate-500">
-        Manage and monitor the main areas of NearMe Salon.
+        Monitor users, salon registrations, services and bookings.
       </p>
     </div>
 
     <div class="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
+      <!-- User Overview -->
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-xl">
           👤
         </div>
+
         <h3 class="text-lg font-bold text-slate-900">User Overview</h3>
         <p class="mt-2 text-sm leading-6 text-slate-500">
-          Review registered customers, salon owners, and administrator accounts.
+          Understand the composition of your platform's registered users.
         </p>
+
         <div class="mt-5 border-t border-slate-100 pt-4">
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Customers</span>
-            <span class="font-semibold text-slate-900"><%= User.where(role: "customer").count %></span>
+            <span class="font-semibold text-slate-900"><%= @total_customers %></span>
           </div>
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Salon Owners</span>
-            <span class="font-semibold text-slate-900"><%= User.where(role: "salon_owner").count %></span>
+            <span class="font-semibold text-slate-900"><%= @total_salon_owners %></span>
           </div>
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Administrators</span>
-            <span class="font-semibold text-slate-900"><%= User.where(role: "admin").count %></span>
+            <span class="font-semibold text-slate-900"><%= @total_admins %></span>
           </div>
         </div>
       </div>
 
+      <!-- Salon Overview -->
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-xl">
           🏬
         </div>
+
         <h3 class="text-lg font-bold text-slate-900">Salon Overview</h3>
         <p class="mt-2 text-sm leading-6 text-slate-500">
-          Track salon listings and the services available to customers.
+          Track registration approvals and services available on the platform.
         </p>
+
         <div class="mt-5 border-t border-slate-100 pt-4">
           <div class="flex justify-between py-2 text-sm">
-            <span class="text-slate-500">Registered Salons</span>
-            <span class="font-semibold text-slate-900"><%= Salon.count %></span>
+            <span class="text-slate-500">Approved Salons</span>
+            <span class="font-semibold text-emerald-600"><%= @approved_salons %></span>
+          </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-slate-500">Pending Salons</span>
+            <span class="font-semibold text-amber-600"><%= @pending_salons %></span>
+          </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-slate-500">Rejected Salons</span>
+            <span class="font-semibold text-red-600"><%= @rejected_salons %></span>
           </div>
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Listed Services</span>
-            <span class="font-semibold text-slate-900"><%= Service.count %></span>
+            <span class="font-semibold text-slate-900"><%= @total_services %></span>
           </div>
         </div>
+
+        <%= link_to "Manage Salons",
+          admin_salons_path,
+          class: "mt-4 inline-flex text-sm font-semibold text-violet-700 hover:text-violet-900" %>
       </div>
 
+      <!-- Booking Overview -->
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xl">
           📊
         </div>
+
         <h3 class="text-lg font-bold text-slate-900">Booking Overview</h3>
         <p class="mt-2 text-sm leading-6 text-slate-500">
-          Monitor appointment activity and booking statuses across the platform.
+          Monitor appointment statuses across the platform.
         </p>
+
         <div class="mt-5 border-t border-slate-100 pt-4">
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Pending</span>
-            <span class="font-semibold text-amber-600"><%= Appointment.where(status: "pending").count %></span>
+            <span class="font-semibold text-amber-600"><%= @pending_appointments %></span>
           </div>
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Confirmed</span>
-            <span class="font-semibold text-emerald-600"><%= Appointment.where(status: "confirmed").count %></span>
+            <span class="font-semibold text-emerald-600"><%= @confirmed_appointments %></span>
+          </div>
+          <div class="flex justify-between py-2 text-sm">
+            <span class="text-slate-500">Completed</span>
+            <span class="font-semibold text-blue-600"><%= @completed_appointments %></span>
           </div>
           <div class="flex justify-between py-2 text-sm">
             <span class="text-slate-500">Cancelled</span>
-            <span class="font-semibold text-red-600"><%= Appointment.where(status: "cancelled").count %></span>
+            <span class="font-semibold text-red-600"><%= @cancelled_appointments %></span>
           </div>
         </div>
       </div>
@@ -176,14 +252,14 @@
       <div class="flex flex-col justify-between gap-2 border-b border-slate-200 px-6 py-5 sm:flex-row sm:items-center">
         <div>
           <h2 class="text-xl font-bold text-slate-900">Recent Appointments</h2>
-          <p class="mt-1 text-sm text-slate-500">The latest bookings on your platform.</p>
+          <p class="mt-1 text-sm text-slate-500">
+            The latest bookings created on your platform.
+          </p>
         </div>
         <span class="text-sm text-slate-500">Latest 5 bookings</span>
       </div>
 
-      <% recent_appointments = Appointment.includes(:user, :salon, :service).order(created_at: :desc).limit(5) %>
-
-      <% if recent_appointments.any? %>
+      <% if @recent_appointments.any? %>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-slate-200">
             <thead class="bg-slate-50">
@@ -195,27 +271,34 @@
                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
               </tr>
             </thead>
+
             <tbody class="divide-y divide-slate-100">
-              <% recent_appointments.each do |appointment| %>
+              <% @recent_appointments.each do |appointment| %>
                 <tr class="transition hover:bg-slate-50">
                   <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900">
                     <%= appointment.user.email %>
                   </td>
+
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                     <%= appointment.salon.name %>
                   </td>
+
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                     <%= appointment.service.name %>
                   </td>
+
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                     <%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
                   </td>
+
                   <td class="whitespace-nowrap px-6 py-4 text-sm">
                     <% status_classes = {
                       "pending" => "bg-amber-100 text-amber-800",
                       "confirmed" => "bg-emerald-100 text-emerald-800",
-                      "cancelled" => "bg-red-100 text-red-800"
+                      "cancelled" => "bg-red-100 text-red-800",
+                      "completed" => "bg-blue-100 text-blue-800"
                     } %>
+
                     <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold <%= status_classes.fetch(appointment.status, 'bg-slate-100 text-slate-700') %>">
                       <%= appointment.status.humanize %>
                     </span>

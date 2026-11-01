@@ -1,291 +1,344 @@
-<div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
 
-  <!-- Page Header -->
-  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <div>
-      <p class="text-xs font-semibold uppercase tracking-wide text-violet-600">
-        Salon Management
-      </p>
-      <h1 class="mt-1 text-2xl font-bold text-slate-900">
-        Salon Appointments
-      </h1>
-      <p class="mt-1 text-sm text-slate-500">
-        Search, review, and manage customer bookings.
-      </p>
+    <!-- Page Header -->
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-wider text-violet-600">Salon Management</p>
+        <h1 class="mt-1 break-words text-2xl font-bold text-slate-900">Salon Appointments</h1>
+        <p class="mt-1 text-sm text-slate-500">Review bookings, attendance, and payments.</p>
+      </div>
+
+      <%= link_to salon_owner_dashboard_path,
+        class: "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100" do %>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15 19-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      <% end %>
     </div>
 
-    <%= link_to "Back to Dashboard", salon_owner_dashboard_path,
-      class: "inline-flex h-9 items-center justify-center rounded-lg border border-violet-200 px-4 text-sm font-semibold text-violet-700 transition hover:bg-violet-50 focus:outline-none focus:ring-2 focus:ring-violet-200" %>
-  </div>
+    <!-- Statistics -->
+    <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <% [
+        ["Total Appointments", @total_appointments, "All bookings", "calendar-days", "text-violet-600", "bg-violet-50"],
+        ["Pending Bookings", @pending_appointments, "Awaiting confirmation", "clock", "text-amber-600", "bg-amber-50"],
+        ["Today's Appointments", @today_appointments, "Scheduled today", "calendar-check", "text-blue-600", "bg-blue-50"],
+        ["Unpaid Bookings", @unpaid_appointments, "Payment not recorded", "credit-card", "text-red-600", "bg-red-50"]
+      ].each do |label, value, description, icon_name, icon_color, icon_bg| %>
+        <div class="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl <%= icon_bg %> <%= icon_color %>">
+            <% if icon_name == "calendar-days" %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.8"/>
+                <path stroke-linecap="round" stroke-width="1.8" d="M16 3v4M8 3v4M3 10h18"/>
+              </svg>
+            <% elsif icon_name == "clock" %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" stroke-width="1.8"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 7v5l3 2"/>
+              </svg>
+            <% elsif icon_name == "calendar-check" %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.8"/>
+                <path stroke-linecap="round" stroke-width="1.8" d="M16 3v4M8 3v4M3 10h18m5 5 2 2 4-4" transform="translate(-1 -1) scale(.9)"/>
+              </svg>
+            <% else %>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.8"/>
+                <path stroke-linecap="round" stroke-width="1.8" d="M2 10h20"/>
+              </svg>
+            <% end %>
+          </div>
 
-  <!-- Dashboard Statistics -->
-  <div class="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-    <% [
-      ["Total Appointments", @total_appointments, "All bookings", "text-violet-600"],
-      ["Pending Bookings", @pending_appointments, "Awaiting confirmation", "text-amber-600"],
-      ["Today's Appointments", @today_appointments, "Scheduled today", "text-blue-600"],
-      ["Unpaid Bookings", @unpaid_appointments, "Payment not recorded", "text-red-600"]
-    ].each do |label, value, description, color| %>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p class="text-xs font-medium text-slate-500 sm:text-sm"><%= label %></p>
-        <p class="mt-1 text-2xl font-bold <%= color %>"><%= value %></p>
-        <p class="mt-1 text-xs text-slate-500"><%= description %></p>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Search and Filters -->
-  <div class="mb-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-    <%= form_with url: salon_owner_appointments_path, method: :get, class: "space-y-4" do |form| %>
-
-      <div>
-        <%= form.label :q, "Search appointments", class: "mb-1 block text-sm font-medium text-slate-700" %>
-        <%= form.text_field :q,
-          value: params[:q],
-          placeholder: "Customer, salon, service...",
-          class: "h-10 w-full rounded-lg border border-slate-300 px-3 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-      </div>
-
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-
-        <div>
-          <%= form.label :status, "Appointment Status", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.select :status,
-            options_for_select([["All statuses", ""]] + Appointment::STATUSES.map { |s| [s.humanize, s] }, params[:status]),
-            {},
-            class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          <div class="min-w-0">
+            <p class="break-words text-xs font-medium text-slate-500 sm:text-sm"><%= label %></p>
+            <p class="mt-1 text-2xl font-bold <%= icon_color %>"><%= value %></p>
+            <p class="mt-0.5 break-words text-xs text-slate-500"><%= description %></p>
+          </div>
         </div>
-
-        <div>
-          <%= form.label :approval_status, "Admin Approval", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.select :approval_status,
-            options_for_select([["All approvals", ""]] + Appointment::APPROVAL_STATUSES.map { |s| [s.humanize, s] }, params[:approval_status]),
-            {},
-            class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-        </div>
-
-        <div>
-          <%= form.label :attendance_status, "Attendance", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.select :attendance_status,
-            options_for_select([["All attendance", ""]] + Appointment::ATTENDANCE_STATUSES.map { |s| [s.humanize, s] }, params[:attendance_status]),
-            {},
-            class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-        </div>
-
-        <div>
-          <%= form.label :payment_status, "Payment", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.select :payment_status,
-            options_for_select([["All payments", ""]] + Appointment::PAYMENT_STATUSES.map { |s| [s.humanize, s] }, params[:payment_status]),
-            {},
-            class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-        </div>
-
-        <div>
-          <%= form.label :date_from, "From date", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.date_field :date_from,
-            value: params[:date_from],
-            class: "h-10 w-full rounded-lg border border-slate-300 px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-        </div>
-
-        <div>
-          <%= form.label :date_to, "To date", class: "mb-1 block text-xs font-medium text-slate-600" %>
-          <%= form.date_field :date_to,
-            value: params[:date_to],
-            class: "h-10 w-full rounded-lg border border-slate-300 px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
-        </div>
-
-      </div>
-
-      <div class="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-3">
-        <%= link_to "Reset", salon_owner_appointments_path,
-          class: "inline-flex h-10 items-center justify-center rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200" %>
-
-        <%= form.submit "Apply Filters",
-          class: "inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-violet-600 px-5 text-sm font-semibold text-white transition hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-200" %>
-      </div>
-
-    <% end %>
-  </div>
-
-  <!-- Appointments List -->
-  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-
-    <div class="flex flex-col gap-1 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-      <h2 class="font-semibold text-slate-900">Bookings</h2>
-      <p class="text-sm text-slate-500">
-        Showing <%= @appointments.size %> appointments on this page.
-      </p>
+      <% end %>
     </div>
 
-    <% if @appointments.any? %>
+    <!-- Search and Filters -->
+    <div class="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+      <div class="mb-4 flex items-center gap-2">
+        <svg class="h-5 w-5 shrink-0 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke-width="1.8"/>
+          <path stroke-linecap="round" stroke-width="1.8" d="m16 16 4 4"/>
+        </svg>
+        <h2 class="font-semibold text-slate-900">Search & Filter Appointments</h2>
+      </div>
 
-      <div class="divide-y divide-slate-100">
+      <%= form_with url: salon_owner_appointments_path, method: :get, class: "space-y-4" do |form| %>
+        <div>
+          <%= form.label :q, "Search appointments", class: "mb-1 block text-sm font-medium text-slate-700" %>
+          <%= form.text_field :q,
+            value: params[:q],
+            placeholder: "Customer, salon, service...",
+            class: "h-11 w-full min-w-0 rounded-lg border border-slate-300 px-3 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+        </div>
 
-        <% @appointments.each do |appointment| %>
-          <div class="border-b border-slate-100 p-4 last:border-b-0 hover:bg-slate-50/70">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div class="min-w-0">
+            <%= form.label :status, "Appointment Status", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.select :status,
+              options_for_select([["All statuses", ""]] + Appointment::STATUSES.map { |s| [s.humanize, s] }, params[:status]),
+              {},
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
 
-            <!-- Title and Status -->
-            <div class="flex flex-wrap items-center gap-2">
-              <h3 class="text-base font-semibold text-slate-900">
-                <%= appointment.service.name %>
-              </h3>
+          <div class="min-w-0">
+            <%= form.label :approval_status, "Admin Approval", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.select :approval_status,
+              options_for_select([["All approvals", ""]] + Appointment::APPROVAL_STATUSES.map { |s| [s.humanize, s] }, params[:approval_status]),
+              {},
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
 
-              <% status_colors = {
-                "pending" => "bg-amber-100 text-amber-800",
-                "confirmed" => "bg-emerald-100 text-emerald-800",
-                "completed" => "bg-blue-100 text-blue-800",
-                "cancelled" => "bg-red-100 text-red-800"
-              } %>
+          <div class="min-w-0">
+            <%= form.label :attendance_status, "Attendance", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.select :attendance_status,
+              options_for_select([["All attendance", ""]] + Appointment::ATTENDANCE_STATUSES.map { |s| [s.humanize, s] }, params[:attendance_status]),
+              {},
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
 
-              <span class="rounded-full px-2.5 py-1 text-xs font-semibold <%= status_colors.fetch(appointment.status, 'bg-slate-100 text-slate-700') %>">
-                <%= appointment.status.humanize %>
-              </span>
+          <div class="min-w-0">
+            <%= form.label :payment_status, "Payment", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.select :payment_status,
+              options_for_select([["All payments", ""]] + Appointment::PAYMENT_STATUSES.map { |s| [s.humanize, s] }, params[:payment_status]),
+              {},
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 bg-white px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
 
-              <span class="rounded-full px-2.5 py-1 text-xs font-semibold <%= appointment.approval_status == 'approved' ? 'bg-emerald-100 text-emerald-800' : appointment.approval_status == 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800' %>">
-                Approval: <%= appointment.approval_status.humanize %>
-              </span>
-            </div>
+          <div class="min-w-0">
+            <%= form.label :date_from, "From date", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.date_field :date_from, value: params[:date_from],
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
 
-            <!-- Appointment Information -->
-            <div class="mt-3 grid grid-cols-2 gap-3 rounded-lg bg-slate-50 p-3 sm:grid-cols-3 xl:grid-cols-5">
+          <div class="min-w-0">
+            <%= form.label :date_to, "To date", class: "mb-1 block text-xs font-medium text-slate-600" %>
+            <%= form.date_field :date_to, value: params[:date_to],
+              class: "h-10 w-full min-w-0 rounded-lg border border-slate-300 px-2 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100" %>
+          </div>
+        </div>
 
-              <div class="min-w-0">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Customer</p>
-                <p class="mt-1 break-words text-sm text-slate-700"><%= appointment.user.email %></p>
+        <div class="flex flex-wrap justify-end gap-2 border-t border-slate-100 pt-3">
+          <%= link_to salon_owner_appointments_path,
+            class: "inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50" do %>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M7 4v6m10-6v6M5 12h14M8 17h8"/>
+            </svg>
+            Reset
+          <% end %>
+
+          <%= form.button type: "submit",
+            class: "inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700" do %>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/>
+            </svg>
+            Apply Filters
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Appointment Cards -->
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex flex-col gap-1 border-b border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="h-5 w-5 shrink-0 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.8"/>
+            <path stroke-linecap="round" stroke-width="1.8" d="M16 3v4M8 3v4M3 10h18"/>
+          </svg>
+          <h2 class="font-semibold text-slate-900">Bookings</h2>
+        </div>
+        <p class="text-sm text-slate-500">Showing <%= @appointments.size %> appointments on this page.</p>
+      </div>
+
+      <% if @appointments.any? %>
+        <div class="space-y-3 bg-slate-50/60 p-3 sm:p-4">
+          <% @appointments.each do |appointment| %>
+            <% booked_services = appointment.appointment_services.includes(:service) %>
+            <% has_service_records = booked_services.any? %>
+
+            <% total_price = if has_service_records
+                 booked_services.sum { |item| item.price.to_d }
+               elsif appointment.service
+                 appointment.service.price.to_d
+               else
+                 0.to_d
+               end %>
+
+            <% total_duration = if has_service_records
+                 booked_services.sum { |item| item.duration.to_i }
+               elsif appointment.service
+                 appointment.service.duration.to_i
+               else
+                 0
+               end %>
+
+            <% formatted_duration = if total_duration < 60
+                 pluralize(total_duration, "minute")
+               else
+                 "#{pluralize(total_duration / 60, 'hour')}#{" #{pluralize(total_duration % 60, 'minute')}" if total_duration % 60 != 0}"
+               end %>
+
+            <% status_colors = {
+              "pending" => "bg-amber-100 text-amber-800",
+              "confirmed" => "bg-emerald-100 text-emerald-800",
+              "completed" => "bg-blue-100 text-blue-800",
+              "cancelled" => "bg-red-100 text-red-800"
+            } %>
+
+            <% attendance_colors = {
+              "attended" => "bg-emerald-100 text-emerald-800",
+              "no_show" => "bg-red-100 text-red-800",
+              "not_marked" => "bg-slate-100 text-slate-700"
+            } %>
+
+            <article class="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md sm:p-5">
+              <!-- Service names and statuses -->
+              <div class="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div class="flex min-w-0 items-start gap-3">
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                  </div>
+
+                  <div class="min-w-0 flex-1">
+                    <h3 class="break-words text-base font-semibold leading-6 text-slate-900 [overflow-wrap:anywhere]">
+                      <% if has_service_records %>
+                        <%= booked_services.map { |item| item.service.name }.join(", ") %>
+                      <% elsif appointment.service %>
+                        <%= appointment.service.name %>
+                      <% else %>
+                        Service unavailable
+                      <% end %>
+                    </h3>
+                    <p class="mt-1 break-words text-sm text-slate-500">
+                      <% if has_service_records %>
+                        <%= pluralize(booked_services.size, "service") %>
+                      <% else %>
+                        1 service
+                      <% end %>
+                      <% if total_duration.positive? %> · <%= formatted_duration %><% end %>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex shrink-0 flex-wrap gap-2 lg:max-w-[45%] lg:justify-end">
+                  <span class="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold <%= status_colors.fetch(appointment.status, 'bg-slate-100 text-slate-700') %>">
+                    <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-current"></span>
+                    <%= appointment.status.humanize %>
+                  </span>
+
+                  <span class="inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold <%= appointment.approval_status == 'approved' ? 'bg-emerald-100 text-emerald-800' : appointment.approval_status == 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800' %>">
+                    <svg class="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6"/>
+                    </svg>
+                    <span class="break-words">Approval: <%= appointment.approval_status.humanize %></span>
+                  </span>
+                </div>
               </div>
 
-              <div class="min-w-0">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Salon</p>
-                <p class="mt-1 break-words text-sm text-slate-700"><%= appointment.salon.name %></p>
+              <!-- Appointment Information -->
+              <div class="mt-4 grid min-w-0 grid-cols-1 gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4" stroke-width="1.8"/>
+                    <path stroke-linecap="round" stroke-width="1.8" d="M4 21a8 8 0 0 1 16 0"/>
+                  </svg>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Customer</p>
+                    <p class="mt-1 break-words text-sm text-slate-700 [overflow-wrap:anywhere]"><%= appointment.user.email %></p>
+                  </div>
+                </div>
+
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 21h18M5 21V7l7-4 7 4v14M9 10h1m4 0h1m-6 4h1m4 0h1M10 21v-4h4v4"/>
+                  </svg>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Salon</p>
+                    <p class="mt-1 break-words text-sm text-slate-700 [overflow-wrap:anywhere]"><%= appointment.salon.name %></p>
+                  </div>
+                </div>
+
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.8"/>
+                    <path stroke-linecap="round" stroke-width="1.8" d="M16 3v4M8 3v4M3 10h18"/>
+                  </svg>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Date &amp; Time</p>
+                    <p class="mt-1 break-words text-sm text-slate-700"><%= appointment.appointment_at.strftime("%A, %d %b %Y, %I:%M %p") %></p>
+                  </div>
+                </div>
+
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5 2a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/>
+                  </svg>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Attendance</p>
+                    <span class="mt-1 inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold <%= attendance_colors.fetch(appointment.attendance_status, 'bg-slate-100 text-slate-700') %>">
+                      <%= appointment.attendance_status.humanize %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.8"/>
+                    <path stroke-linecap="round" stroke-width="1.8" d="M2 10h20"/>
+                  </svg>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Total Price</p>
+                    <p class="mt-1 break-words text-sm font-bold text-violet-700"><%= number_to_currency(total_price, unit: "₹", precision: 2) %></p>
+                    <p class="mt-1 break-words text-xs text-slate-500">
+                      <%= appointment.payment_status.humanize %>
+                      <% if appointment.payment_method.present? %> · <%= appointment.payment_method.humanize %><% end %>
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Date & Time</p>
-                <p class="mt-1 text-sm text-slate-700"><%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Attendance</p>
-                <p class="mt-1 text-sm text-slate-700"><%= appointment.attendance_status.humanize %></p>
-              </div>
-
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Payment</p>
-                <p class="mt-1 text-sm text-slate-700">
-                  <%= appointment.payment_status.humanize %>
-                  <% if appointment.payment_method.present? %>
-                    · <%= appointment.payment_method.humanize %>
-                  <% end %>
-                </p>
-                <p class="mt-1 text-sm font-semibold text-slate-900">
-                  <%= number_to_currency(appointment.service.price, unit: "₹") %>
-                </p>
-              </div>
-
-            </div>
-
-            <!-- Booking Actions -->
-            <div class="mt-3 flex flex-wrap items-center gap-2">
-
-              <%= link_to "View Details", salon_owner_appointment_path(appointment),
-                class: "inline-flex h-9 items-center justify-center rounded-lg border border-violet-200 px-3 text-sm font-semibold text-violet-700 hover:bg-violet-50" %>
-
-              <% if appointment.status == "pending" && appointment.approval_status == "approved" %>
-                <%= button_to "Confirm", confirm_salon_owner_appointment_path(appointment),
-                  method: :patch,
-                  class: "inline-flex h-9 items-center justify-center rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white hover:bg-emerald-700" %>
-              <% end %>
-
-              <% if %w[pending confirmed].include?(appointment.status) %>
-                <%= button_to "Cancel", cancel_salon_owner_appointment_path(appointment),
-                  method: :patch,
-                  class: "inline-flex h-9 items-center justify-center rounded-lg bg-red-600 px-4 text-sm font-semibold text-white hover:bg-red-700",
-                  form: { data: { turbo_confirm: "Are you sure you want to cancel this appointment?" } } %>
-              <% end %>
-
-            </div>
-
-            <!-- Attendance: only for confirmed or completed appointments -->
-            <% if %w[confirmed completed].include?(appointment.status) %>
-              <div class="mt-3 rounded-lg border border-slate-200 p-3">
-                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Attendance
-                </p>
-
-                <%= form_with url: update_attendance_salon_owner_appointment_path(appointment),
-                  method: :patch,
-                  class: "flex flex-col gap-2 sm:flex-row sm:items-center" do |form| %>
-
-                  <%= form.select :attendance_status,
-                    options_for_select(
-                      [["Attended", "attended"], ["No-show", "no_show"]],
-                      appointment.attendance_status == "not_marked" ? "attended" : appointment.attendance_status
-                    ),
-                    {},
-                    class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100 sm:flex-1" %>
-
-                  <%= form.submit "Save Attendance",
-                    class: "inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200 sm:w-40" %>
-
+              <!-- Details Action -->
+              <div class="mt-4 flex justify-end border-t border-slate-100 pt-3">
+                <%= link_to salon_owner_appointment_path(appointment),
+                  class: "inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-200" do %>
+                  <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+                    <circle cx="12" cy="12" r="2.5" stroke-width="1.8"/>
+                  </svg>
+                  Manage Appointment
                 <% end %>
               </div>
-            <% end %>
+            </article>
+          <% end %>
+        </div>
 
-            <!-- Payment: consistent layout for every appointment -->
-            <div class="mt-3 rounded-lg border border-slate-200 p-3">
-              <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Payment
-              </p>
-
-              <%= form_with url: record_payment_salon_owner_appointment_path(appointment),
-                method: :patch,
-                class: "flex flex-col gap-2 sm:flex-row sm:items-center" do |form| %>
-
-                <%= form.select :payment_status,
-                  options_for_select(
-                    [["Unpaid", "unpaid"], ["Paid", "paid"], ["Refunded", "refunded"]],
-                    appointment.payment_status
-                  ),
-                  {},
-                  class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100 sm:flex-1" %>
-
-                <%= form.select :payment_method,
-                  options_for_select(
-                    [["Cash", "cash"], ["UPI", "upi"], ["Card", "card"], ["Bank Transfer", "bank_transfer"]],
-                    appointment.payment_method
-                  ),
-                  { include_blank: "Payment method" },
-                  class: "h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100 sm:flex-1" %>
-
-                <%= form.submit "Save Payment",
-                  class: "inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-200 sm:w-40" %>
-
-              <% end %>
-            </div>
-
+        <div class="border-t border-slate-200 px-4 py-4">
+          <%= paginate @appointments %>
+        </div>
+      <% else %>
+        <div class="px-5 py-14 text-center">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-violet-50 text-violet-600">
+            <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="16" rx="2" stroke-width="1.8"/>
+              <path stroke-linecap="round" stroke-width="1.8" d="M16 3v4M8 3v4M3 10h18"/>
+            </svg>
           </div>
-        <% end %>
-
-      </div>
-
-      <!-- Pagination -->
-      <div class="border-t border-slate-200 px-4 py-3">
-        <%= paginate @appointments %>
-      </div>
-
-    <% else %>
-
-      <div class="px-5 py-12 text-center">
-        <h3 class="text-base font-semibold text-slate-900">No appointments found</h3>
-        <p class="mt-1 text-sm text-slate-500">
-          Try changing your search or filters.
-        </p>
-        <%= link_to "Clear filters", salon_owner_appointments_path,
-          class: "mt-3 inline-flex h-9 items-center justify-center rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" %>
-      </div>
-
-    <% end %>
-
+          <h3 class="mt-4 text-base font-semibold text-slate-900">No appointments found</h3>
+          <p class="mt-1 text-sm text-slate-500">Try changing your search or filters.</p>
+          <%= link_to "Clear filters", salon_owner_appointments_path,
+            class: "mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" %>
+        </div>
+      <% end %>
+    </div>
   </div>
-
 </div>

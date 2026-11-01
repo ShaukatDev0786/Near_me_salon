@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   get "discover_salons/index"
   get "discover_salons/show"
-  namespace :admin do
-    get "dashboard/index"
-  end
+
   namespace :salon_owner do
     get "dashboard/index"
   end
@@ -58,6 +56,17 @@ Rails.application.routes.draw do
         patch :cancel
         patch :update_attendance
         patch :record_payment
+      end
+    end
+  end
+
+  namespace :admin do
+    get "dashboard/index"
+
+    resources :salons, only: [:index] do
+      member do
+        patch :approve
+        patch :reject
       end
     end
   end

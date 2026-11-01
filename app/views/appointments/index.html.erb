@@ -108,6 +108,25 @@
                "bg-slate-100 text-slate-700 ring-slate-500/20"
              end %>
 
+          <% booked_services = appointment.appointment_services %>
+          <% has_multiple_service_records = booked_services.exists? %>
+
+          <% total_price = if has_multiple_service_records
+               booked_services.sum(:price)
+             elsif appointment.service
+               appointment.service.price.to_d
+             else
+               0.to_d
+             end %>
+
+          <% total_duration = if has_multiple_service_records
+               booked_services.sum(:duration)
+             elsif appointment.service
+               appointment.service.duration.to_i
+             else
+               0
+             end %>
+
           <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-100/50">
             <div class="h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500"></div>
 
@@ -143,10 +162,20 @@
                     </svg>
                   </span>
                   <div class="min-w-0">
-                    <p class="text-xs font-medium text-slate-500">Service</p>
-                    <p class="mt-1 break-words text-sm font-semibold text-slate-800">
-                      <%= appointment.service.name %>
-                    </p>
+                    <p class="text-xs font-medium text-slate-500">Services</p>
+                    <div class="mt-1 space-y-1 text-sm font-semibold text-slate-800">
+                      <% if has_multiple_service_records %>
+                        <ol class="list-decimal space-y-1 pl-4">
+                          <% booked_services.includes(:service).each do |item| %>
+                            <li class="break-words"><%= item.service.name %></li>
+                          <% end %>
+                        </ol>
+                      <% elsif appointment.service %>
+                        <p class="break-words"><%= appointment.service.name %></p>
+                      <% else %>
+                        <p>Service unavailable</p>
+                      <% end %>
+                    </div>
                   </div>
                 </div>
 
@@ -157,9 +186,28 @@
                     </svg>
                   </span>
                   <div>
-                    <p class="text-xs font-medium text-slate-500">Price</p>
+                    <p class="text-xs font-medium text-slate-500">Total Price</p>
                     <p class="mt-1 text-sm font-bold text-slate-900">
-                      <%= number_to_currency(appointment.service.price, unit: "₹", precision: 2) %>
+                      <%= number_to_currency(total_price, unit: "₹", precision: 2) %>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                  <span class="mt-0.5 text-violet-500">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" stroke-width="1.8"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 7v5l3 2"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <p class="text-xs font-medium text-slate-500">Total Duration</p>
+                    <p class="mt-1 text-sm font-semibold text-slate-800">
+                      <%= if total_duration < 60
+                        pluralize(total_duration, "minute")
+                      else
+                        "#{pluralize(total_duration / 60, 'hour')}#{" #{pluralize(total_duration % 60, 'minute')}" if total_duration % 60 != 0}"
+                      end %>
                     </p>
                   </div>
                 </div>
@@ -174,7 +222,7 @@
                   <div>
                     <p class="text-xs font-medium text-slate-500">Date and Time</p>
                     <p class="mt-1 text-sm font-semibold text-slate-800">
-                      <%= appointment.appointment_at.strftime("%d %b %Y, %I:%M %p") %>
+                      <%= appointment.appointment_at.strftime("%A, %d %b %Y, %I:%M %p") %>
                     </p>
                   </div>
                 </div>

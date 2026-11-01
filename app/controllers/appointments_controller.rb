@@ -4,36 +4,71 @@ class AppointmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_customer!
 
-  before_action :set_salon, only: [ :new, :create ]
-  before_action :set_appointment, only: [ :show, :cancel ]
+  before_action :set_salon, only: [:new, :create]
+  before_action :ensure_salon_approved!, only: [:new, :create]
+  before_action :set_appointment, only: [:show, :cancel]
 
   # Show the current customer's appointments.
   def index
-    @appointments = current_user.appointments.includes(:salon, :service).order(appointment_at: :desc)
+    @appointments = current_user.appointments
+      .includes(:salon, :service)
+      .order(appointment_at: :desc)
   end
 
   # Display the booking form.
   def new
     @appointment = current_user.appointments.build
     @services = @salon.services.where(active: true).order(:name)
+
+    selected_ids = Array(params[:service_ids]).reject(&:blank?).map(&:to_s).uniq
+    selected_ids = [params[:service_id].to_s] if selected_ids.empty? && params[:service_id].present?
+
+    @selected_services = @services.where(id: selected_ids)
   end
 
   # Save a new appointment.
   def create
-    @appointment = current_user.appointments.build(appointment_params)
-    @appointment.salon = @salon
-    @appointment.status = "pending"
     @services = @salon.services.where(active: true).order(:name)
 
-    unless @appointment.service && @appointment.service.salon_id == @salon.id && @appointment.service.active?
-      @appointment.errors.add(:service, "is not available at this salon")
+    selected_ids = Array(params[:service_ids]).reject(&:blank?).map(&:to_s).uniq
+    selected_ids = [params.dig(:appointment, :service_id).to_s] if selected_ids.empty? &&
+      params.dig(:appointment, :service_id).present?
+
+    @selected_services = @services.where(id: selected_ids)
+
+    unless selected_ids.any? && @selected_services.size == selected_ids.size
+      @appointment = current_user.appointments.build(appointment_params)
+      @appointment.errors.add(:service, "selection is invalid or unavailable")
       render :new, status: :unprocessable_entity
       return
     end
 
-    if @appointment.save
+    @appointment = current_user.appointments.build(appointment_params)
+    @appointment.salon = @salon
+    @appointment.service = @selected_services.first
+    @appointment.status = "pending"
+
+    unless @selected_services.all? { |service| service.salon_id == @salon.id && service.active? }
+      @appointment.errors.add(:service, "must be active and belong to this salon")
+      render :new, status: :unprocessable_entity
+      return
+    end
+
+    begin
+      Appointment.transaction do
+        @appointment.save!
+
+        @selected_services.each do |service|
+          @appointment.appointment_services.create!(
+            service: service,
+            price: service.price,
+            duration: service.duration
+          )
+        end
+      end
+
       redirect_to appointments_path, notice: "Appointment booked successfully."
-    else
+    rescue ActiveRecord::RecordInvalid
       render :new, status: :unprocessable_entity
     end
   end
@@ -45,7 +80,8 @@ class AppointmentsController < ApplicationController
   # Allow customers to cancel their own pending appointments.
   def cancel
     unless @appointment.status == "pending"
-      redirect_to appointments_path, alert: "Only pending appointments can be cancelled."
+      redirect_to appointments_path,
+        alert: "Only pending appointments can be cancelled."
       return
     end
 
@@ -64,6 +100,14 @@ class AppointmentsController < ApplicationController
 
   def set_salon
     @salon = Salon.find(params[:salon_id])
+  end
+
+  # Prevent booking at salons that are not approved by an admin.
+  def ensure_salon_approved!
+    return if @salon.approval_status == "approved"
+
+    redirect_to root_path,
+      alert: "This salon is not currently available for appointments."
   end
 
   def set_appointment

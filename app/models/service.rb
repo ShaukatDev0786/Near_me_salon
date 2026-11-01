@@ -2,7 +2,8 @@ class Service < ApplicationRecord
   # Every service belongs to a salon.
   belongs_to :salon
 
-  has_many :appointments, dependent: :destroy
+  has_many :appointment_services, dependent: :restrict_with_error
+  has_many :appointments, through: :appointment_services
 
   # Basic service validations.
   validates :name, presence: true, length: { maximum: 100 }

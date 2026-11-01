@@ -1,37 +1,198 @@
+<div class="min-h-screen bg-slate-50">
+  <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
 
-<div class="mx-auto max-w-3xl p-6">
-  <h1 class="text-3xl font-bold"><%= @salon.name %></h1>
-
-  <p class="mt-3"><%= @salon.description %></p>
-  <p class="mt-2">Phone: <%= @salon.phone %></p>
-  <p class="mt-2">Address: <%= @salon.address %></p>
-  <p class="mt-2">City: <%= @salon.city %></p>
-  <p class="mt-2">PIN Code: <%= @salon.pincode %></p>
-
-  <h2 class="mb-4 mt-8 text-2xl font-bold">Our Services</h2>
-
-  <% if @services.any? %>
-    <% @services.each do |service| %>
-      <div class="mb-4 rounded-lg border p-4">
-        <h3 class="text-lg font-semibold"><%= service.name %></h3>
-
-        <p class="mt-1 text-gray-600"><%= service.description %></p>
-
-        <p class="mt-2 font-medium">
-          Price: ₹<%= number_with_precision(service.price, precision: 2) %>
-        </p>
-
-        <p>Duration: <%= service.duration %> minutes</p>
-
-        <% if user_signed_in? && current_user.customer? %>
-          <%= link_to "Book This Service", new_salon_appointment_path(@salon, service_id: service.id), class: "mt-3 inline-block rounded bg-blue-600 px-4 py-2 text-white" %>
+    <!-- Salon Header -->
+    <div class="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="h-2 bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500"></div>
+      <div class="p-6 sm:p-8">
+        <%= link_to search_salons_path,
+            class: "mb-5 inline-flex items-center gap-2 text-sm font-semibold text-violet-700 hover:text-violet-900" do %>
+          <span aria-hidden="true">←</span> Back to Search
         <% end %>
+
+        <p class="text-sm font-semibold uppercase tracking-widest text-violet-600">
+          Discover Your Next Look
+        </p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <%= @salon.name %>
+        </h1>
+
+        <% if @salon.description.present? %>
+          <p class="mt-3 max-w-3xl leading-7 text-slate-600">
+            <%= @salon.description %>
+          </p>
+        <% end %>
+
+        <div class="mt-6 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">📍</span>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Address</p>
+              <p class="mt-1 text-sm text-slate-800"><%= @salon.address %></p>
+              <p class="text-sm text-slate-600"><%= @salon.city %> — <%= @salon.pincode %></p>
+            </div>
+          </div>
+
+          <% if @salon.phone.present? %>
+            <div class="flex items-start gap-3">
+              <span class="text-xl">☎️</span>
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Contact</p>
+                <p class="mt-1 text-sm text-slate-800"><%= @salon.phone %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="mb-6">
+      <p class="text-sm font-semibold uppercase tracking-widest text-violet-600">Our Menu</p>
+      <h2 class="mt-1 text-2xl font-bold text-slate-900">Choose Your Services</h2>
+      <p class="mt-2 text-sm text-slate-600">
+        Select one or more services. Your total price and duration will update automatically.
+      </p>
+    </div>
+
+    <% if @services.any? %>
+      <%= form_with url: new_salon_appointment_path(@salon), method: :get,
+          id: "multi-service-selection",
+          class: "space-y-6" do %>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <% @services.each do |service| %>
+            <label class="group flex cursor-pointer gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-violet-300 hover:shadow-md">
+              <div class="pt-1">
+                <input
+                  type="checkbox"
+                  name="service_ids[]"
+                  value="<%= service.id %>"
+                  data-price="<%= service.price %>"
+                  data-duration="<%= service.duration %>"
+                  class="service-checkbox h-5 w-5 rounded border-slate-300 text-violet-600 focus:ring-violet-500"
+                >
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                  <h3 class="font-semibold text-slate-900"><%= service.name %></h3>
+                  <span class="rounded-full bg-violet-50 px-3 py-1 text-sm font-bold text-violet-700">
+                    <%= number_to_currency(service.price, unit: "₹", precision: 2) %>
+                  </span>
+                </div>
+
+                <% if service.description.present? %>
+                  <p class="mt-2 text-sm leading-6 text-slate-600"><%= service.description %></p>
+                <% end %>
+
+                <p class="mt-3 text-sm text-slate-500">
+                  <span aria-hidden="true">◷</span>
+                  <%= service.duration %> minutes
+                </p>
+              </div>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Live Summary -->
+        <div class="sticky bottom-4 rounded-2xl border border-violet-200 bg-white p-5 shadow-lg sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-slate-500">Your Selection</p>
+              <p class="mt-1 text-lg font-bold text-slate-900">
+                <span id="selected-service-count">0</span> services selected
+              </p>
+            </div>
+
+            <div class="flex gap-6">
+              <div>
+                <p class="text-xs text-slate-500">Total Duration</p>
+                <p class="mt-1 text-lg font-bold text-slate-900">
+                  <span id="total-duration">0</span> min
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500">Total Price</p>
+                <p class="mt-1 text-xl font-bold text-violet-700">
+                  ₹<span id="total-price">0.00</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <% if user_signed_in? && current_user.customer? %>
+            <button
+              type="submit"
+              id="book-selected-services"
+              disabled
+              class="mt-5 w-full rounded-xl bg-violet-600 px-6 py-3.5 font-semibold text-white transition hover:bg-violet-700 focus:outline-none focus:ring-4 focus:ring-violet-200 disabled:cursor-not-allowed disabled:bg-slate-300 sm:w-auto"
+            >
+              Continue to Booking →
+            </button>
+          <% elsif !user_signed_in? %>
+            <p class="mt-4 text-sm text-slate-600">
+              Please <%= link_to "sign in", new_user_session_path, class: "font-semibold text-violet-700 underline" %>
+              as a customer to book services.
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p class="font-semibold text-slate-800">No active services available</p>
+        <p class="mt-2 text-sm text-slate-500">Please check back later for available services.</p>
       </div>
     <% end %>
-  <% else %>
-    <p>This salon has no active services listed yet.</p>
-  <% end %>
-
-  <%= link_to "Back to Search", search_salons_path,
-      class: "mt-4 inline-block text-blue-600" %>
+  </div>
 </div>
+
+<script>
+  (() => {
+    const form = document.getElementById("multi-service-selection");
+    if (!form) return;
+
+    const checkboxes = form.querySelectorAll(".service-checkbox");
+    const countElement = document.getElementById("selected-service-count");
+    const priceElement = document.getElementById("total-price");
+    const durationElement = document.getElementById("total-duration");
+    const submitButton = document.getElementById("book-selected-services");
+
+    function updateSummary() {
+      let count = 0;
+      let totalPrice = 0;
+      let totalDuration = 0;
+
+      checkboxes.forEach((checkbox) => {
+        if (!checkbox.checked) return;
+
+        count += 1;
+        totalPrice += Number(checkbox.dataset.price || 0);
+        totalDuration += Number(checkbox.dataset.duration || 0);
+      });
+
+      countElement.textContent = count;
+      priceElement.textContent = totalPrice.toFixed(2);
+      durationElement.textContent = totalDuration;
+
+      if (submitButton) {
+        submitButton.disabled = count === 0;
+      }
+    }
+
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", updateSummary);
+    });
+
+    form.addEventListener("submit", (event) => {
+      const selected = Array.from(checkboxes).some((checkbox) => checkbox.checked);
+
+      if (!selected) {
+        event.preventDefault();
+        alert("Please select at least one service.");
+      }
+    });
+
+    updateSummary();
+  })();
+</script>

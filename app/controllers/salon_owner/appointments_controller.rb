@@ -70,44 +70,44 @@ class SalonOwner::AppointmentsController < ApplicationController
 
   def confirm
     unless @appointment.status == "pending"
-      redirect_to salon_owner_appointments_path, alert: "Only pending appointments can be confirmed."
+      redirect_to salon_owner_appointment_path(@appointment), alert: "Only pending appointments can be confirmed."
       return
     end
 
     @appointment.update!(status: "confirmed")
-    redirect_to salon_owner_appointments_path, notice: "Appointment confirmed successfully."
+    redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment confirmed successfully."
   end
 
   def cancel
     unless %w[pending confirmed].include?(@appointment.status)
-      redirect_to salon_owner_appointments_path, alert: "This appointment cannot be cancelled."
+      redirect_to salon_owner_appointment_path(@appointment), alert: "This appointment cannot be cancelled."
       return
     end
 
     @appointment.update!(status: "cancelled")
-    redirect_to salon_owner_appointments_path, notice: "Appointment cancelled successfully."
+    redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment cancelled successfully."
   end
 
   def update_attendance
     attendance = params[:attendance_status]
 
     unless Appointment::ATTENDANCE_STATUSES.include?(attendance) && %w[attended no_show].include?(attendance)
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: "Please select a valid attendance status."
       return
     end
 
     unless %w[confirmed completed].include?(@appointment.status)
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: "Only confirmed or completed appointments can have attendance recorded."
       return
     end
 
     if @appointment.update(attendance_status: attendance)
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   notice: "Attendance updated successfully."
     else
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: @appointment.errors.full_messages.to_sentence
     end
   end
@@ -117,13 +117,13 @@ class SalonOwner::AppointmentsController < ApplicationController
     payment_method = params[:payment_method].to_s.strip.presence
 
     unless %w[unpaid paid refunded].include?(payment_status)
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: "Please select a valid payment status."
       return
     end
 
     if payment_status == "paid" && payment_method.blank?
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: "Please select a payment method."
       return
     end
@@ -135,10 +135,10 @@ class SalonOwner::AppointmentsController < ApplicationController
     }
 
     if @appointment.update(attributes)
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   notice: "Payment details updated successfully."
     else
-      redirect_to salon_owner_appointments_path,
+      redirect_to salon_owner_appointment_path(@appointment),
                   alert: @appointment.errors.full_messages.to_sentence
     end
   end
