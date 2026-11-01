@@ -5,6 +5,7 @@ class Salon < ApplicationRecord
   # A salon can offer multiple services and appointments.
   has_many :services, dependent: :destroy
   has_many :appointments, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   APPROVAL_STATUSES = %w[pending approved rejected].freeze
 

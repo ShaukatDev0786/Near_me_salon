@@ -80,7 +80,13 @@
                 <div class="flex justify-between gap-4">
                   <span class="text-sm text-slate-600">Total duration</span>
                   <span class="font-semibold text-slate-900">
-                    <%= @selected_services.sum { |service| service.duration.to_i } %> minutes
+                    <%
+                      total_duration = @selected_services.sum { |service| service.duration.to_i }
+                      hours = total_duration / 60
+                      minutes = total_duration % 60
+                    %>
+
+                    <%= "#{hours} hour#{'s' if hours != 1}" if hours > 0 %><%= " " if hours > 0 && minutes > 0 %><%= "#{minutes} minute#{'s' if minutes != 1}" if minutes > 0 || hours == 0 %>
                   </span>
                 </div>
 

@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :salons, dependent: :destroy
 
   has_many :appointments, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   # Every user must have a name.
   validates :name, presence: true

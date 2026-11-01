@@ -5,6 +5,7 @@ class Appointment < ApplicationRecord
 
   has_many :appointment_services, dependent: :destroy
   has_many :booked_services, through: :appointment_services, source: :service
+  has_one :review, dependent: :destroy
 
   STATUSES = %w[pending confirmed cancelled completed].freeze
   APPROVAL_STATUSES = %w[pending approved rejected].freeze

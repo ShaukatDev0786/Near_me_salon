@@ -262,6 +262,17 @@
               <% end %>
             <% end %>
 
+            <% if @appointment.status == "confirmed" && @appointment.approval_status == "approved" %>
+              <%= button_to complete_salon_owner_appointment_path(@appointment),
+                method: :patch,
+                class: "inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700" do %>
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6"/>
+                </svg>
+                Mark as Completed
+              <% end %>
+            <% end %>
+
             <% if %w[pending confirmed].include?(@appointment.status) %>
               <%= button_to cancel_salon_owner_appointment_path(@appointment),
                 method: :patch,

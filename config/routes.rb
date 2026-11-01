@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :appointments, only: [ :index, :show ] do
       member do
         patch :confirm
+        patch :complete
         patch :cancel
         patch :update_attendance
         patch :record_payment
@@ -70,4 +71,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :reviews, only: [:create, :destroy]
 end

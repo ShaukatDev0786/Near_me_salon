@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_31_164158) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_01_081947) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_164158) do
     t.index ["salon_id"], name: "index_appointments_on_salon_id"
     t.index ["service_id"], name: "index_appointments_on_service_id"
     t.index ["user_id"], name: "index_appointments_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "salon_id", null: false
+    t.bigint "appointment_id", null: false
+    t.integer "rating", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id"], name: "index_reviews_on_appointment_id"
+    t.index ["salon_id"], name: "index_reviews_on_salon_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "salons", force: :cascade do |t|
@@ -97,6 +110,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_164158) do
   add_foreign_key "appointments", "salons"
   add_foreign_key "appointments", "services"
   add_foreign_key "appointments", "users"
+  add_foreign_key "reviews", "appointments"
+  add_foreign_key "reviews", "salons"
+  add_foreign_key "reviews", "users"
   add_foreign_key "salons", "users"
   add_foreign_key "services", "salons"
 end

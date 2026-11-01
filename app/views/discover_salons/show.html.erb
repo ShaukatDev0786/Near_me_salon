@@ -88,7 +88,9 @@
 
                 <p class="mt-3 text-sm text-slate-500">
                   <span aria-hidden="true">◷</span>
-                  <%= service.duration %> minutes
+                  <% hours = service.duration / 60 %>
+                  <% mins = service.duration % 60 %>
+                  <%= hours > 0 ? "#{hours}h #{mins}m" : "#{mins} mins" %>
                 </p>
               </div>
             </label>
@@ -109,7 +111,7 @@
               <div>
                 <p class="text-xs text-slate-500">Total Duration</p>
                 <p class="mt-1 text-lg font-bold text-slate-900">
-                  <span id="total-duration">0</span> min
+                  <span id="total-duration">0</span>
                 </p>
               </div>
               <div>
@@ -144,6 +146,120 @@
         <p class="mt-2 text-sm text-slate-500">Please check back later for available services.</p>
       </div>
     <% end %>
+
+    <!-- Customer Reviews Section -->
+    <section class="mt-10 border-t border-gray-200 pt-8">
+      <h2 class="text-2xl font-bold text-gray-900">
+        Customer Reviews
+      </h2>
+
+      <% reviews = @salon.reviews.includes(:user).order(created_at: :desc) %>
+
+      <% if reviews.any? %>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="text-yellow-500 text-xl">★</span>
+          <span class="font-semibold text-gray-900">
+            <%= @salon.reviews.average(:rating)&.round(1) || "No ratings yet" %>
+          </span>
+          <span class="text-gray-500 text-sm">
+            (<%= reviews.count %> reviews)
+          </span>
+        </div>
+
+        <div class="mt-6 space-y-4">
+          <% reviews.each do |review| %>
+            <div class="rounded-lg border border-gray-200 p-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="font-semibold text-gray-900 break-words">
+                  <%= review.user.name %>
+                </p>
+
+                <span class="text-yellow-500" aria-label="<%= review.rating %> out of 5 stars">
+                  <%= "★" * review.rating %><%= "☆" * (5 - review.rating) %>
+                </span>
+              </div>
+
+              <% if review.comment.present? %>
+                <p class="mt-2 whitespace-pre-line break-words text-gray-700">
+                  <%= review.comment %>
+                </p>
+              <% end %>
+
+              <p class="mt-2 text-xs text-gray-500">
+                <%= review.created_at.strftime("%d %b %Y") %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="mt-3 text-gray-600">
+          No reviews yet. Be the first to review this salon!
+        </p>
+      <% end %>
+
+      <% if user_signed_in? && current_user.customer? %>
+        <% completed_appointments = current_user.appointments
+            .where(salon_id: @salon.id, status: "completed") %>
+
+        <% reviewable_appointment = completed_appointments
+            .where.not(id: Review.select(:appointment_id))
+            .order(appointment_at: :desc)
+            .first %>
+
+        <% if reviewable_appointment %>
+          <div class="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <h3 class="text-lg font-semibold text-gray-900">
+              Write a Review
+            </h3>
+
+            <p class="mt-1 text-sm text-gray-600">
+              Share your experience with other customers.
+            </p>
+
+            <%= form_with url: reviews_path, scope: :review, method: :post, class: "mt-4 space-y-4" do |form| %>
+              <%= hidden_field_tag :appointment_id, reviewable_appointment.id %>
+
+              <div>
+                <%= form.label :rating, "Your Rating", class: "mb-1 block text-sm font-medium text-gray-700" %>
+                <%= form.select :rating,
+                    options_for_select([
+                      ["5 stars - Excellent", 5],
+                      ["4 stars - Very good", 4],
+                      ["3 stars - Good", 3],
+                      ["2 stars - Fair", 2],
+                      ["1 star - Poor", 1]
+                    ]),
+                    { prompt: "Choose a rating" },
+                    required: true,
+                    class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2" %>
+              </div>
+
+              <div>
+                <%= form.label :comment, "Your Comment (Optional)", class: "mb-1 block text-sm font-medium text-gray-700" %>
+                <%= form.text_area :comment,
+                    rows: 4,
+                    maxlength: 2000,
+                    placeholder: "Tell us about your experience...",
+                    class: "w-full rounded-lg border border-gray-300 bg-white px-3 py-2" %>
+              </div>
+
+              <%= form.submit "Submit Review",
+                  class: "rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 cursor-pointer" %>
+            <% end %>
+          </div>
+        <% elsif completed_appointments.exists? %>
+          <p class="mt-5 text-sm text-gray-600">
+            You have already reviewed your completed appointments at this salon.
+          </p>
+        <% end %>
+      <% elsif !user_signed_in? %>
+        <p class="mt-5 text-sm text-gray-600">
+          <%= link_to "Sign in", new_user_session_path, class: "font-medium text-indigo-600 hover:underline" %>
+          to leave a review after a completed appointment.
+        </p>
+      <% end %>
+    </section>
+
   </div>
 </div>
 
@@ -173,7 +289,10 @@
 
       countElement.textContent = count;
       priceElement.textContent = totalPrice.toFixed(2);
-      durationElement.textContent = totalDuration;
+      const hours = Math.floor(totalDuration / 60);
+      const minutes = totalDuration % 60;
+
+      durationElement.textContent = hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""}${minutes > 0 ? ` ${minutes} minute${minutes > 1 ? "s" : ""}` : ""}` : `${minutes} minute${minutes !== 1 ? "s" : ""}`;
 
       if (submitButton) {
         submitButton.disabled = count === 0;
