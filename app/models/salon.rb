@@ -2,10 +2,11 @@ class Salon < ApplicationRecord
   # Each salon belongs to one user.
   belongs_to :user
 
-  # A salon can offer multiple services.
+  # A salon can offer multiple services and appointments.
   has_many :services, dependent: :destroy
-
   has_many :appointments, dependent: :destroy
+
+  APPROVAL_STATUSES = %w[pending approved rejected].freeze
 
   # Required salon information.
   validates :name, presence: true
@@ -19,4 +20,11 @@ class Salon < ApplicationRecord
 
   # Basic Indian PIN code format: six digits.
   validates :pincode, format: { with: /\A[1-9]\d{5}\z/ }
+
+  # Validate salon approval status.
+  validates :approval_status, inclusion: { in: APPROVAL_STATUSES }
+
+  # Publicly available salons must be approved.
+  scope :approved, -> { where(approval_status: "approved") }
+  scope :pending_approval, -> { where(approval_status: "pending") }
 end

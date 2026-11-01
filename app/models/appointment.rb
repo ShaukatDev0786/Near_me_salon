@@ -3,6 +3,9 @@ class Appointment < ApplicationRecord
   belongs_to :salon
   belongs_to :service
 
+  has_many :appointment_services, dependent: :destroy
+  has_many :booked_services, through: :appointment_services, source: :service
+
   STATUSES = %w[pending confirmed cancelled completed].freeze
   APPROVAL_STATUSES = %w[pending approved rejected].freeze
   ATTENDANCE_STATUSES = %w[not_marked attended no_show].freeze

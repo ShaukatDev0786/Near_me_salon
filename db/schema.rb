@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_31_075945) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_164158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "appointment_services", force: :cascade do |t|
+    t.bigint "appointment_id", null: false
+    t.bigint "service_id", null: false
+    t.decimal "price", precision: 12, scale: 2, null: false
+    t.integer "duration", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["appointment_id", "service_id"], name: "index_appointment_services_on_appointment_and_service", unique: true
+    t.index ["appointment_id"], name: "index_appointment_services_on_appointment_id"
+    t.index ["service_id"], name: "index_appointment_services_on_service_id"
+  end
 
   create_table "appointments", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -48,6 +60,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_075945) do
     t.string "pincode"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "approval_status", default: "pending", null: false
+    t.index ["approval_status"], name: "index_salons_on_approval_status"
     t.index ["user_id"], name: "index_salons_on_user_id"
   end
 
@@ -78,6 +92,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_075945) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "appointment_services", "appointments"
+  add_foreign_key "appointment_services", "services"
   add_foreign_key "appointments", "salons"
   add_foreign_key "appointments", "services"
   add_foreign_key "appointments", "users"

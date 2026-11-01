@@ -41,7 +41,7 @@
         </p>
       </div>
 
-      <%= form_with url: salons_path, method: :get, local: true, id: "salon-search-form", class: "grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end" do |form| %>
+      <%= form_with url: discover_salons_index_path, method: :get, local: true, id: "salon-search-form", class: "grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end" do |form| %>
 
         <div>
           <%= form.label :city, "City",
@@ -173,8 +173,7 @@
               </div>
 
               <div class="mt-6">
-                <%= link_to salon_path(salon),
-                    class: "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-600 focus:outline-none focus:ring-4 focus:ring-violet-100" do %>
+                <%= link_to discover_salon_path(salon), class: "inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-600 focus:outline-none focus:ring-4 focus:ring-violet-100" do %>
                   View Salon & Services
                   <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-6-6 6 6-6 6" />
@@ -204,7 +203,7 @@
         </p>
 
         <%= link_to "Explore All Salons",
-            discover_salons_path,
+            discover_salons_index_path,
             class: "mt-6 inline-flex items-center justify-center rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-violet-700 focus:outline-none focus:ring-4 focus:ring-violet-100" %>
       </div>
     <% end %>

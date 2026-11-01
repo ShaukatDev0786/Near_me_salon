@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  appointment: one
+  service: one
+  price: 9.99
+  duration: 1
+
+two:
+  appointment: two
+  service: two
+  price: 9.99
+  duration: 1
