@@ -1,5 +1,5 @@
 class SalonOwner::AppointmentsController < ApplicationController
-  before_action :set_appointment, only: [ :show, :confirm, :cancel, :update_attendance, :record_payment ]
+  before_action :set_appointment, only: [ :show, :confirm, :complete, :cancel, :update_attendance, :record_payment ]
 
   def index
     @appointments = Appointment
@@ -137,6 +137,24 @@ class SalonOwner::AppointmentsController < ApplicationController
     if @appointment.update(attributes)
       redirect_to salon_owner_appointment_path(@appointment),
                   notice: "Payment details updated successfully."
+    else
+      redirect_to salon_owner_appointment_path(@appointment),
+                  alert: @appointment.errors.full_messages.to_sentence
+    end
+  end
+
+  def complete
+    @appointment = Appointment.find(params[:id])
+
+    if @appointment.status == "cancelled"
+      redirect_to salon_owner_appointment_path(@appointment),
+                  alert: "A cancelled appointment cannot be completed."
+      return
+    end
+
+    if @appointment.update(status: "completed")
+      redirect_to salon_owner_appointment_path(@appointment),
+                  notice: "Appointment marked as completed."
     else
       redirect_to salon_owner_appointment_path(@appointment),
                   alert: @appointment.errors.full_messages.to_sentence
