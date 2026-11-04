@@ -82,6 +82,7 @@ class SalonOwner::AppointmentsController < ApplicationController
     end
 
     @appointment.update!(status: "confirmed")
+    AppointmentMailer.appointment_approved(@appointment).deliver_later
     redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment confirmed successfully."
   end
 

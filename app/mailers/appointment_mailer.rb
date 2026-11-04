@@ -4,7 +4,7 @@ class AppointmentMailer < ApplicationMailer
   #
   #   en.appointment_mailer.booking_confirmation.subject
   #
-  def booking_confirmation(appointment)
+   def booking_confirmation(appointment)
     @appointment = appointment
     @customer = appointment.user
     @salon = appointment.salon
@@ -12,6 +12,17 @@ class AppointmentMailer < ApplicationMailer
     mail(
       to: @customer.email,
       subject: "Booking Confirmation - NearMe Salon"
+    )
+  end
+
+  def appointment_approved(appointment)
+    @appointment = appointment
+    @customer = appointment.user
+    @salon = appointment.salon
+
+    mail(
+      to: @customer.email,
+      subject: "Your Appointment Has Been Confirmed - NearMe Salon"
     )
   end
 end
