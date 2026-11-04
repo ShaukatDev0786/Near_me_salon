@@ -93,6 +93,7 @@ class SalonOwner::AppointmentsController < ApplicationController
     end
 
     @appointment.update!(status: "cancelled")
+    AppointmentMailer.appointment_cancelled(@appointment).deliver_later
     redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment cancelled successfully."
   end
 

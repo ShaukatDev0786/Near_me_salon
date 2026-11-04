@@ -25,4 +25,15 @@ class AppointmentMailer < ApplicationMailer
       subject: "Your Appointment Has Been Confirmed - NearMe Salon"
     )
   end
+
+  def appointment_cancelled(appointment)
+    @appointment = appointment
+    @customer = appointment.user
+    @salon = appointment.salon
+
+    mail(
+      to: @customer.email,
+      subject: "Appointment Cancelled - NearMe Salon"
+    )
+  end
 end
