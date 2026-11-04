@@ -96,6 +96,31 @@
 
       <div class="space-y-7 p-5 sm:p-6">
 
+        <!-- Assigned Staff -->
+        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Assigned Staff
+          </h3>
+
+          <% if @appointment.staff_member.present? %>
+            <div class="mt-3">
+              <p class="text-lg font-semibold text-violet-700">
+                <%= @appointment.staff_member.name %>
+              </p>
+
+              <% if @appointment.staff_member.phone.present? %>
+                <p class="mt-1 text-sm text-slate-600">
+                  Phone: <%= @appointment.staff_member.phone %>
+                </p>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="mt-3 text-sm text-amber-600">
+              No staff member assigned yet.
+            </p>
+          <% end %>
+        </div>
+
         <!-- Booked Services -->
         <section class="min-w-0">
           <div class="flex items-center gap-2">
@@ -240,36 +265,70 @@
         <% end %>
 
         <!-- Manage Appointment -->
+        <!-- Available Actions -->
         <section class="border-t border-slate-100 pt-6">
-          <div class="flex items-center gap-2">
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8V4H4v8h4m4-4 4 4m-4-4-4 4m4-4v12h8v-8"/>
+          <div class="flex items-start gap-3">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="1.8"
+                      d="M8 5H6a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2v-2M8 5a2 2 0 002 2h4a2 2 0 002-2M8 5a2 2 0 012-2h4a2 2 0 012 2m1 8l2 2 4-4"/>
               </svg>
             </div>
-            <h3 class="font-bold text-slate-900">Manage Appointment</h3>
+
+            <div class="min-w-0 flex-1">
+              <h3 class="text-base font-bold text-slate-900">
+                Manage Appointment
+              </h3>
+              <p class="mt-1 text-sm text-slate-500">
+                Review the current status and choose an available action.
+              </p>
+            </div>
           </div>
 
-          <div class="mt-4 flex flex-wrap gap-2">
-            <% if @appointment.status == "pending" && @appointment.approval_status == "approved" %>
+          <div class="mt-3 flex flex-wrap gap-3">
+            <% if @appointment.status == "pending" &&
+                  @appointment.approval_status == "approved" %>
+
               <%= button_to confirm_salon_owner_appointment_path(@appointment),
                 method: :patch,
-                class: "inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700" do %>
-                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6"/>
-                </svg>
+                class: "inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700" do %>
                 Confirm Appointment
               <% end %>
             <% end %>
 
-            <% if @appointment.status == "confirmed" && @appointment.approval_status == "approved" %>
-              <%= button_to complete_salon_owner_appointment_path(@appointment),
-                method: :patch,
-                class: "inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700" do %>
-                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6"/>
-                </svg>
-                Mark as Completed
+            <% if @appointment.status == "confirmed" &&
+                  @appointment.approval_status == "approved" %>
+
+              <% if @appointment.attendance_status != "attended" %>
+                <div class="w-full rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                  <strong>Customer attendance required.</strong>
+                  Mark the customer as Attended before completing this appointment.
+                </div>
+              <% end %>
+
+              <% if @appointment.payment_status != "paid" %>
+                <div class="w-full rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                  <strong>Payment required.</strong>
+                  Record the payment as Paid before completing this appointment.
+                </div>
+              <% end %>
+
+              <% if @appointment.attendance_status == "attended" &&
+                    @appointment.payment_status == "paid" %>
+
+                <%= button_to complete_salon_owner_appointment_path(@appointment),
+                  method: :patch,
+                  form: { data: { turbo_confirm: "The customer attended and payment is complete. Mark this appointment as completed?" } },
+                  class: "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700" do %>
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="2" d="m5 12 4 4L19 6"/>
+                  </svg>
+                  Mark as Completed
+                <% end %>
               <% end %>
             <% end %>
 
@@ -277,14 +336,54 @@
               <%= button_to cancel_salon_owner_appointment_path(@appointment),
                 method: :patch,
                 form: { data: { turbo_confirm: "Are you sure you want to cancel this appointment?" } },
-                class: "inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50" do %>
-                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 6l12 12M18 6 6 18"/>
-                </svg>
+                class: "inline-flex min-h-11 items-center justify-center rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50" do %>
                 Cancel Appointment
               <% end %>
             <% end %>
           </div>
+
+          <% if @appointment.status == "completed" &&
+                @appointment.attendance_status == "attended" &&
+                @appointment.payment_status == "paid" %>
+
+            <div class="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <div class="flex items-center gap-2 font-semibold text-emerald-800">
+                <span>✓</span>
+                Appointment Completed
+              </div>
+              <p class="mt-1 text-sm text-emerald-700">
+                The customer attended and payment has been completed.
+              </p>
+            </div>
+
+          <% elsif @appointment.status == "completed" %>
+
+            <div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              <p class="font-semibold">Appointment Requirements Incomplete</p>
+              <p class="mt-1">
+                Customer attendance and completed payment are required.
+              </p>
+
+              <ul class="mt-2 list-disc pl-5">
+                <% if @appointment.attendance_status != "attended" %>
+                  <li>Customer has not been marked as Attended.</li>
+                <% end %>
+
+                <% if @appointment.payment_status != "paid" %>
+                  <li>Payment has not been marked as Paid.</li>
+                <% end %>
+              </ul>
+            </div>
+
+          <% elsif @appointment.status == "cancelled" %>
+
+            <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
+              <p class="font-semibold text-red-800">Appointment Cancelled</p>
+              <p class="mt-1 text-sm text-red-700">
+                No further appointment actions are available.
+              </p>
+            </div>
+          <% end %>
         </section>
 
         <!-- Attendance -->

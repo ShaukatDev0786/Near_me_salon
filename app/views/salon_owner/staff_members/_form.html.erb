@@ -1,0 +1,43 @@
+
+<div class="mx-auto max-w-3xl p-6">
+  <% if @staff_member.errors.any? %>
+    <div class="mb-4 rounded-lg border border-red-300 bg-red-50 p-4 text-red-700">
+      <p class="font-semibold">Please fix the following errors:</p>
+      <ul class="mt-2 list-disc pl-5">
+        <% @staff_member.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: [:salon_owner, @staff_member], class: "space-y-5" do |f| %>
+    <div>
+      <%= f.label :name, "Staff Name", class: "mb-1 block font-medium" %>
+      <%= f.text_field :name,
+          required: true,
+          class: "w-full rounded-lg border border-gray-300 px-4 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :phone, "Phone Number", class: "mb-1 block font-medium" %>
+      <%= f.telephone_field :phone,
+          class: "w-full rounded-lg border border-gray-300 px-4 py-2" %>
+    </div>
+
+    <% if @staff_member.persisted? %>
+      <div class="flex items-center gap-2">
+        <%= f.check_box :active, class: "rounded" %>
+        <%= f.label :active, "Active staff member" %>
+      </div>
+    <% end %>
+
+    <div class="flex gap-3">
+      <%= f.submit class: "rounded-lg bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700" %>
+
+      <%= link_to "Back",
+          salon_owner_staff_members_path,
+          class: "rounded-lg border px-5 py-2 hover:bg-gray-50" %>
+    </div>
+  <% end %>
+</div>

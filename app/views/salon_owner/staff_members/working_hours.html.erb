@@ -1,0 +1,118 @@
+<div class="mx-auto max-w-5xl p-6">
+  <h1 class="mb-2 text-2xl font-bold">
+    Working Hours: <%= @staff_member.name %>
+  </h1>
+
+  <p class="mb-6 text-gray-600">
+    Configure this staff member's working hours for each day.
+    On a day off, you do not need to enter any times.
+  </p>
+
+  <% if flash.now[:alert].present? %>
+    <div class="mb-4 rounded-lg bg-red-50 p-3 text-red-700">
+      <%= flash.now[:alert] %>
+    </div>
+  <% end %>
+
+  <%= form_with url: update_working_hours_salon_owner_staff_member_path(@staff_member),
+                method: :patch,
+                class: "space-y-4" do %>
+
+    <div class="overflow-x-auto rounded-lg border">
+      <table class="w-full text-left">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-3">Day</th>
+            <th class="p-3">Opening Time</th>
+            <th class="p-3">Closing Time</th>
+            <th class="p-3">Day Off</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% day_names = %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday] %>
+
+          <% @working_hours.each do |hour| %>
+            <tr class="border-t">
+              <td class="p-3 font-medium">
+                <%= day_names[hour.day_of_week] %>
+              </td>
+
+              <td class="p-3">
+                <%= time_field_tag(
+                      "working_hours[#{hour.day_of_week}][opens_at]",
+                      hour.opens_at&.strftime("%H:%M"),
+                      id: "working_hours_#{hour.day_of_week}_opens_at",
+                      disabled: hour.day_off?,
+                      class: "w-full rounded border border-gray-300 p-2"
+                    ) %>
+              </td>
+
+              <td class="p-3">
+                <%= time_field_tag(
+                      "working_hours[#{hour.day_of_week}][closes_at]",
+                      hour.closes_at&.strftime("%H:%M"),
+                      id: "working_hours_#{hour.day_of_week}_closes_at",
+                      disabled: hour.day_off?,
+                      class: "w-full rounded border border-gray-300 p-2"
+                    ) %>
+              </td>
+
+              <td class="p-3">
+                <%= check_box_tag(
+                      "working_hours[#{hour.day_of_week}][day_off]",
+                      "1",
+                      hour.day_off?,
+                      id: "working_hours_#{hour.day_of_week}_day_off",
+                      class: "rounded day-off-checkbox",
+                      data: { day: hour.day_of_week }
+                    ) %>
+
+                <%= label_tag(
+                      "working_hours_#{hour.day_of_week}_day_off",
+                      "Day off",
+                      class: "ml-1"
+                    ) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <%= submit_tag "Save Working Hours",
+          class: "rounded-lg bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700" %>
+
+      <%= link_to "Back to Staff",
+          salon_owner_staff_members_path,
+          class: "rounded-lg border border-gray-300 px-5 py-2 hover:bg-gray-50" %>
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+  document.addEventListener("change", function(event) {
+    if (!event.target.matches(".day-off-checkbox")) return;
+
+    const day = event.target.dataset.day;
+    const isDayOff = event.target.checked;
+
+    const openingTime = document.getElementById(
+      `working_hours_${day}_opens_at`
+    );
+
+    const closingTime = document.getElementById(
+      `working_hours_${day}_closes_at`
+    );
+
+    openingTime.disabled = isDayOff;
+    closingTime.disabled = isDayOff;
+
+    if (isDayOff) {
+      openingTime.value = "";
+      closingTime.value = "";
+    }
+  });
+</script>

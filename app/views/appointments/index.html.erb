@@ -153,6 +153,18 @@
                 </span>
               </div>
 
+              <div class="flex min-w-0 items-start gap-2.5">
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Assigned Staff
+                  </p>
+
+                  <p class="mt-1 break-words text-sm font-medium text-violet-700">
+                    <%= appointment.staff_member&.name || "Not assigned" %>
+                  </p>
+                </div>
+              </div>
+
               <!-- Booking Details -->
               <div class="mt-6 grid grid-cols-1 gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2">
                 <div class="flex items-start gap-3">

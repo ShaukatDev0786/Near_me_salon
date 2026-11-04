@@ -291,6 +291,28 @@
                   </div>
                 </div>
 
+                <!-- Assigned Staff Member -->
+                <div class="flex min-w-0 items-start gap-2.5">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true">
+                    <circle cx="12" cy="8" r="4" stroke-width="1.8"/>
+                    <path stroke-linecap="round" stroke-width="1.8" d="M4 21a8 8 0 0 1 16 0"/>
+                  </svg>
+
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      Assigned Staff
+                    </p>
+
+                    <p class="mt-1 break-words text-sm font-medium text-violet-700">
+                      <%= appointment.staff_member&.name || "Not assigned" %>
+                    </p>
+                  </div>
+                </div>
+
                 <div class="flex min-w-0 items-start gap-2.5">
                   <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.8"/>

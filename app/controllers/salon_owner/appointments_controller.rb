@@ -5,7 +5,7 @@ class SalonOwner::AppointmentsController < ApplicationController
     @appointments = Appointment
       .joins(:salon)
       .where(salons: { user_id: current_user.id })
-      .includes(:salon, :service, :user)
+      .includes(:salon, :service, :user, :staff_member, appointment_services: :service)
       .order(appointment_at: :desc)
 
     # Search by customer email, salon name, or service name.
@@ -20,26 +20,31 @@ class SalonOwner::AppointmentsController < ApplicationController
         )
     end
 
-    # Apply filters only when the corresponding value is present.
+    # Filter by appointment status.
     if Appointment::STATUSES.include?(params[:status])
       @appointments = @appointments.where(status: params[:status])
     end
 
+    # Filter by attendance status.
     if Appointment::ATTENDANCE_STATUSES.include?(params[:attendance_status])
       @appointments = @appointments.where(attendance_status: params[:attendance_status])
     end
 
+    # Filter by payment status.
     if Appointment::PAYMENT_STATUSES.include?(params[:payment_status])
       @appointments = @appointments.where(payment_status: params[:payment_status])
     end
 
+    # Filter by approval status.
     if Appointment::APPROVAL_STATUSES.include?(params[:approval_status])
       @appointments = @appointments.where(approval_status: params[:approval_status])
     end
 
+    # Filter by date range.
     if params[:date_from].present?
       begin
-        @appointments = @appointments.where("appointment_at >= ?", Date.iso8601(params[:date_from]).beginning_of_day)
+        start_date = Date.iso8601(params[:date_from]).beginning_of_day
+        @appointments = @appointments.where("appointment_at >= ?", start_date)
       rescue Date::Error
         flash.now[:alert] = "Invalid start date. Please select a valid date."
       end
@@ -47,7 +52,8 @@ class SalonOwner::AppointmentsController < ApplicationController
 
     if params[:date_to].present?
       begin
-        @appointments = @appointments.where("appointment_at <= ?", Date.iso8601(params[:date_to]).end_of_day)
+        end_date = Date.iso8601(params[:date_to]).end_of_day
+        @appointments = @appointments.where("appointment_at <= ?", end_date)
       rescue Date::Error
         flash.now[:alert] = "Invalid end date. Please select a valid date."
       end
@@ -55,8 +61,9 @@ class SalonOwner::AppointmentsController < ApplicationController
 
     @appointments = @appointments.page(params[:page]).per(10)
 
-    # Dashboard counts across all appointments belonging to this owner's salons.
-    owner_appointments = Appointment.joins(:salon)
+    # Dashboard counts across all appointments belonging to this owner.
+    owner_appointments = Appointment
+      .joins(:salon)
       .where(salons: { user_id: current_user.id })
 
     @total_appointments = owner_appointments.count
@@ -144,20 +151,27 @@ class SalonOwner::AppointmentsController < ApplicationController
   end
 
   def complete
-    @appointment = Appointment.find(params[:id])
+    @appointment = Appointment.joins(:salon).where(salons: { user_id: current_user.id }).find(params[:id])
 
-    if @appointment.status == "cancelled"
-      redirect_to salon_owner_appointment_path(@appointment),
-                  alert: "A cancelled appointment cannot be completed."
+    unless @appointment.status == "confirmed" && @appointment.approval_status == "approved"
+      redirect_to salon_owner_appointment_path(@appointment), alert: "Only confirmed and approved appointments can be completed."
+      return
+    end
+
+    unless @appointment.attendance_status == "attended"
+      redirect_to salon_owner_appointment_path(@appointment), alert: "Please mark the customer as Attended before completing the appointment."
+      return
+    end
+
+    unless @appointment.payment_status == "paid"
+      redirect_to salon_owner_appointment_path(@appointment), alert: "Please complete the payment before completing the appointment."
       return
     end
 
     if @appointment.update(status: "completed")
-      redirect_to salon_owner_appointment_path(@appointment),
-                  notice: "Appointment marked as completed."
+      redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment completed successfully."
     else
-      redirect_to salon_owner_appointment_path(@appointment),
-                  alert: @appointment.errors.full_messages.to_sentence
+      redirect_to salon_owner_appointment_path(@appointment), alert: @appointment.errors.full_messages.to_sentence
     end
   end
 

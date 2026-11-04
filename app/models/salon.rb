@@ -7,6 +7,8 @@ class Salon < ApplicationRecord
   has_many :appointments, dependent: :destroy
   has_many :reviews, dependent: :destroy
 
+  has_many :staff_members, dependent: :destroy
+
   APPROVAL_STATUSES = %w[pending approved rejected].freeze
 
   # Required salon information.

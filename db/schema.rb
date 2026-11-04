@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_01_081947) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,11 +41,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_081947) do
     t.datetime "paid_at"
     t.datetime "admin_reviewed_at"
     t.text "admin_notes"
+    t.bigint "staff_member_id"
     t.index ["approval_status"], name: "index_appointments_on_approval_status"
     t.index ["attendance_status"], name: "index_appointments_on_attendance_status"
     t.index ["payment_status"], name: "index_appointments_on_payment_status"
     t.index ["salon_id"], name: "index_appointments_on_salon_id"
     t.index ["service_id"], name: "index_appointments_on_service_id"
+    t.index ["staff_member_id"], name: "index_appointments_on_staff_member_id"
     t.index ["user_id"], name: "index_appointments_on_user_id"
   end
 
@@ -90,6 +91,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_081947) do
     t.index ["salon_id"], name: "index_services_on_salon_id"
   end
 
+  create_table "staff_members", force: :cascade do |t|
+    t.bigint "salon_id", null: false
+    t.string "name", null: false
+    t.string "phone"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["salon_id"], name: "index_staff_members_on_salon_id"
+  end
+
+  create_table "staff_working_hours", force: :cascade do |t|
+    t.bigint "staff_member_id", null: false
+    t.integer "day_of_week", null: false
+    t.time "opens_at"
+    t.time "closes_at"
+    t.boolean "day_off", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_member_id", "day_of_week"], name: "index_staff_working_hours_on_staff_and_day", unique: true
+    t.index ["staff_member_id"], name: "index_staff_working_hours_on_staff_member_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -109,10 +132,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_01_081947) do
   add_foreign_key "appointment_services", "services"
   add_foreign_key "appointments", "salons"
   add_foreign_key "appointments", "services"
+  add_foreign_key "appointments", "staff_members"
   add_foreign_key "appointments", "users"
   add_foreign_key "reviews", "appointments"
   add_foreign_key "reviews", "salons"
   add_foreign_key "reviews", "users"
   add_foreign_key "salons", "users"
   add_foreign_key "services", "salons"
+  add_foreign_key "staff_members", "salons"
+  add_foreign_key "staff_working_hours", "staff_members"
 end

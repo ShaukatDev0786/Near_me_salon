@@ -2,6 +2,7 @@ class Appointment < ApplicationRecord
   belongs_to :user
   belongs_to :salon
   belongs_to :service
+  belongs_to :staff_member, optional: true
 
   has_many :appointment_services, dependent: :destroy
   has_many :booked_services, through: :appointment_services, source: :service

@@ -59,6 +59,13 @@ Rails.application.routes.draw do
         patch :record_payment
       end
     end
+
+    resources :staff_members, except: [ :show ] do
+      member do
+        get :working_hours
+        patch :update_working_hours
+      end
+    end
   end
 
   namespace :admin do

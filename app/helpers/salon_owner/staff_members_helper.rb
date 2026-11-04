@@ -1,0 +1,2 @@
+module SalonOwner::StaffMembersHelper
+end

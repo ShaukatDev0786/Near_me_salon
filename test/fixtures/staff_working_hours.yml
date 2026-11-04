@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  staff_member: one
+  day_of_week: 1
+  opens_at: 2026-11-03 11:58:13
+  closes_at: 2026-11-03 11:58:13
+  day_off: false
+
+two:
+  staff_member: two
+  day_of_week: 1
+  opens_at: 2026-11-03 11:58:13
+  closes_at: 2026-11-03 11:58:13
+  day_off: false
