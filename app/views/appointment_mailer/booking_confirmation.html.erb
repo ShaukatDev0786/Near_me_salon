@@ -1,0 +1,18 @@
+<h1>Booking Confirmation</h1>
+
+<p>Hello <%= @customer.name %>,</p>
+
+<p>Your appointment has been booked successfully!</p>
+
+<h2>Appointment Details</h2>
+
+<ul>
+  <li><strong>Salon:</strong> <%= @salon.name %></li>
+  <li><strong>Service:</strong> <%= @appointment.booked_services.map(&:name).presence&.join(", ") || @appointment.service.name %></li>
+  <li><strong>Date and Time:</strong> <%= @appointment.appointment_at.strftime("%d %B %Y at %I:%M %p") %></li>
+  <li><strong>Status:</strong> <%= @appointment.status.humanize %></li>
+</ul>
+
+<p>Thank you for choosing NearMe Salon!</p>
+
+<p>We look forward to seeing you.</p>
