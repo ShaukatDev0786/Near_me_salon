@@ -111,7 +111,7 @@ class AppointmentsController < ApplicationController
       render :new, status: :unprocessable_entity
       return
     end
-
+    AppointmentMailer.booking_confirmation(@appointment).deliver_later
     redirect_to appointments_path, notice: "Appointment booked successfully."
   end
 
