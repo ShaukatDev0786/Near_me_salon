@@ -2,6 +2,7 @@
 @import "./auth.css";
 @import "./services.css";
 @import "./salon_appointments.css";
+@import "../stylesheets/home.css";
 
 
 /* Floating toast notifications */

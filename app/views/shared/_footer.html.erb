@@ -1,0 +1,65 @@
+<footer class="site-footer mt-12">
+  <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:px-12">
+
+    <!-- Brand -->
+    <div>
+      <%= link_to root_path, class: "text-2xl font-extrabold text-white" do %>
+        <span class="text-purple-300">✂</span> NearMe Salon
+      <% end %>
+
+      <p class="mt-3 max-w-sm text-sm leading-7">
+        Find your style. Book with ease. Discover trusted salons and professional beauty services near you.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h3 class="font-bold text-white">Quick Links</h3>
+      <div class="mt-4 flex flex-col gap-3 text-sm">
+        <%= link_to "Home", root_path %>
+        <%= link_to "Services", root_path(anchor: "services") %>
+        <%= link_to "Find Salons", search_salons_path %>
+        <%= link_to "How It Works", root_path(anchor: "how-it-works") %>
+      </div>
+    </div>
+
+    <!-- For Users -->
+    <div>
+      <h3 class="font-bold text-white">For Users</h3>
+      <div class="mt-4 flex flex-col gap-3 text-sm">
+        <% if user_signed_in? %>
+          <%= link_to "My Bookings", appointments_path %>
+        <% else %>
+          <%= link_to "Sign In", new_user_session_path %>
+        <% end %>
+        <%= link_to "Explore Salons", search_salons_path %>
+      </div>
+    </div>
+
+    <!-- For Salon Owners -->
+    <div>
+      <h3 class="font-bold text-white">For Salon Owners</h3>
+      <div class="mt-4 flex flex-col gap-3 text-sm">
+        <% if user_signed_in? %>
+          <%= link_to "My Salons", salons_path %>
+          <%= link_to "Manage Appointments", salon_owner_appointments_path %>
+        <% else %>
+          <%= link_to "Sign In", new_user_session_path %>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <div class="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-2 px-6 py-4 text-center sm:flex-row lg:px-12">
+      <p class="text-sm">
+        © <%= Date.current.year %> NearMe Salon. All rights reserved.
+      </p>
+      <p class="text-sm">
+        Made with <span class="text-pink-400">♥</span> for your style and confidence.
+      </p>
+    </div>
+  </div>
+</footer>

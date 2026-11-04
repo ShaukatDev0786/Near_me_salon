@@ -1,0 +1,431 @@
+/* ========================================
+NearMe Salon - Homepage Styles
+======================================== */
+
+/* Homepage Footer */
+.site-footer {
+  background: linear-gradient(
+    to right,
+    #2e1065,
+    #581c87,
+    #4c1d95
+  ) !important;
+  color: #ffffff;
+  margin-top: 3rem;
+}
+
+/* Footer Headings */
+.site-footer h2,
+.site-footer h3 {
+  color: #ffffff;
+}
+
+/* Footer Paragraphs and Links */
+.site-footer p,
+.site-footer a {
+  color: #ddd6fe;
+}
+
+/* Footer Link Hover */
+.site-footer a:hover {
+  color: #ffffff !important;
+}
+
+/* Footer Copyright Section */
+.site-footer .footer-bottom {
+  background-color: rgb(0 0 0 / 20%);
+  border-top: 1px solid rgb(255 255 255 / 20%);
+}
+
+.site-footer a.find-salon-link {
+  color: #5b21b6 !important;
+  background-color: transparent;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.site-footer a.find-salon-link:hover {
+  color: #ffffff !important;
+  background-color: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+.popular-services-section {
+  background: #ffffff;
+}
+
+.popular-service-card {
+  min-width: 0;
+}
+
+.popular-service-card img {
+  display: block;
+}
+
+.popular-service-card a:hover {
+  color: #ffffff !important;
+  background-color: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+.popular-service-image-wrapper {
+  width: 100% !important;
+  height: 220px !important;
+  overflow: hidden !important;
+  position: relative;
+}
+
+.popular-service-image-wrapper img.popular-service-image {
+  display: block !important;
+  width: 100% !important;
+  height: 220px !important;
+  min-height: 220px !important;
+  max-height: 220px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Improve spacing between the image and content */
+.why-nearme-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 64px;
+}
+
+/* Add breathing room around the right-side content */
+.why-nearme-content {
+  min-width: 0;
+  padding: 20px 12px 20px 0;
+}
+
+/* Slightly smaller heading */
+.why-nearme-content h2 {
+  margin: 0;
+  color: #1f1235;
+  font-size: clamp(28px, 2.6vw, 36px);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+
+.why-nearme-content h2 span {
+  display: block;
+  color: #7c3aed;
+}
+
+/* Better space below the heading */
+.why-nearme-intro {
+  margin: 20px 0 32px;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* More space between the benefits */
+.why-nearme-benefits {
+  display: grid;
+  gap: 26px;
+}
+
+/* Better spacing between each icon and its text */
+.why-nearme-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Improve benefit text readability */
+.why-nearme-benefit h3 {
+  margin: 2px 0 7px;
+  color: #2e1065;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.why-nearme-benefit p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* More breathing room before the button */
+.why-nearme-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 34px;
+  padding: 14px 24px;
+  border: 1px solid #7c3aed;
+  border-radius: 12px;
+  background: #7c3aed;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+
+/* Why Book with NearMe Salon */
+.why-nearme-section {
+  width: 100%;
+  padding: 64px 24px;
+  margin: 32px auto;
+  background: linear-gradient(135deg, #faf5ff 0%, #ffffff 55%, #f5f3ff 100%);
+  box-sizing: border-box;
+}
+
+.why-nearme-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 56px;
+}
+
+.why-nearme-image {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #ede9fe;
+  box-shadow: 0 20px 45px rgba(76, 29, 149, 0.16);
+}
+
+.why-nearme-image > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.why-nearme-image:hover > img {
+  transform: scale(1.04);
+}
+
+.why-nearme-image-badge {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.why-nearme-badge-icon {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 25px;
+}
+
+.why-nearme-image-badge strong {
+  display: block;
+  color: #2e1065;
+  font-size: 15px;
+}
+
+.why-nearme-image-badge p {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.why-nearme-content {
+  min-width: 0;
+}
+
+.why-nearme-eyebrow {
+  margin: 0 0 12px;
+  color: #7c3aed;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.why-nearme-content h2 {
+  margin: 0;
+  color: #1f1235;
+  font-size: clamp(30px, 3.3vw, 42px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.why-nearme-content h2 span {
+  display: block;
+  color: #7c3aed;
+}
+
+.why-nearme-intro {
+  margin: 18px 0 28px;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.why-nearme-benefits {
+  display: grid;
+  gap: 22px;
+}
+
+.why-nearme-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.why-nearme-icon {
+  display: flex;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd6fe;
+  border-radius: 14px;
+  background: #f5f3ff;
+  color: #6d28d9;
+  font-size: 23px;
+  font-weight: 700;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.why-nearme-benefit:hover .why-nearme-icon {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+.why-nearme-benefit h3 {
+  margin: 1px 0 5px;
+  color: #2e1065;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.why-nearme-benefit p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.why-nearme-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 14px 24px;
+  border: 1px solid #7c3aed;
+  border-radius: 12px;
+  background: #7c3aed;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.why-nearme-button:hover {
+  background: #5b21b6;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+/* Tablet and mobile */
+@media (max-width: 900px) {
+  .why-nearme-section {
+    padding: 48px 20px;
+  }
+
+  .why-nearme-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+
+  .why-nearme-image {
+    height: 380px;
+  }
+
+  .why-nearme-content h2 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-nearme-section {
+    padding: 36px 16px;
+  }
+
+  .why-nearme-image {
+    height: 300px;
+    border-radius: 18px;
+  }
+
+  .why-nearme-image-badge {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    padding: 12px;
+  }
+
+  .why-nearme-content h2 {
+    font-size: 30px;
+  }
+
+  .why-nearme-benefits {
+    gap: 18px;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .why-nearme-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .why-nearme-content {
+    padding: 0;
+  }
+
+  .why-nearme-content h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-nearme-content h2 {
+    font-size: 28px;
+  }
+
+  .why-nearme-benefits {
+    gap: 20px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .site-footer {
+    margin-top: 2rem;
+  }
+}

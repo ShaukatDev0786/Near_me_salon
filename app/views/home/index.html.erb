@@ -1,150 +1,346 @@
-<div class="min-h-screen bg-gray-50 text-gray-900">
-  <main>
-    <section class="mx-auto max-w-7xl px-6 py-5 lg:py-6">
-      <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-10">
+<div class="min-h-screen overflow-x-hidden bg-white font-sans text-slate-950">
 
-        <!-- Left side: smaller video -->
-        <div class="mx-auto w-full max-w-lg lg:max-w-none">
-          <div class="overflow-hidden rounded-2xl bg-gray-200 shadow-lg">
-            <%= video_tag "/videos/haircut1.mp4",
-                autoplay: true,
-                muted: true,
-                loop: true,
-                playsinline: true,
-                controls: true,
-                preload: "metadata",
-                class: "h-74 w-full object-cover sm:h-82 lg:h-[510px] xl:h-[560px]" %>
+  <!-- Navigation is assumed to be rendered by your existing application layout. -->
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-violet-50 via-white to-purple-100">
+      <div class="mx-auto grid max-w-[1440px] items-center gap-8 px-5 py-8 sm:px-8 lg:grid-cols-2 lg:gap-12 lg:px-12 lg:py-10">
+
+        <!-- Left: Salon video -->
+        <div class="relative h-[600px] overflow-hidden rounded-3xl bg-gray-100 shadow-2xl sm:h-[700px] lg:h-[750px]" style="height: -webkit-fill-available; min-height: 650px;">
+
+          <%= video_tag "/videos/haircut1.mp4",
+            autoplay: true,
+            muted: true,
+            loop: true,
+            playsinline: true,
+            controls: true,
+            preload: "metadata",
+            class: "block h-full w-full object-cover" %>
+
+          <div class="absolute bottom-5 left-5 rounded-2xl bg-white/95 px-4 py-3 shadow-lg">
+            <p class="text-sm font-bold text-gray-900">Book Top-Rated Salons</p>
+            <p class="text-xs text-gray-600">Discover your next favourite style</p>
           </div>
 
-          <p class="mt-2 text-center text-xs text-gray-500 lg:text-left">
-          </p>
         </div>
 
-        <!-- Right side: compact heading and search form -->
-        <div class="text-center lg:text-left">
-          <p class="mb-2 text-sm font-semibold tracking-wide text-indigo-600">
+        <!-- Right: Hero heading and search form -->
+        <div class="min-w-0">
+          <div class="inline-flex items-center rounded-full border border-violet-300 bg-white/80 px-4 py-2 text-xs font-bold tracking-wide text-violet-800">
+            <span class="mr-2 h-2 w-2 rounded-full bg-violet-600"></span>
             YOUR STYLE, YOUR NEIGHBORHOOD
-          </p>
+          </div>
 
-          <h1 class="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl xl:text-5xl">
-            Find the best salon
-            <span class="text-indigo-600">near you.</span>
+          <h1 class="mt-4 max-w-2xl text-4xl font-extrabold leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+            Great style starts with the
+            <span class="text-violet-600">right salon.</span>
           </h1>
 
-          <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-600 sm:text-base lg:mx-0">
-            Discover nearby salons, compare services and prices,
-            and book your next appointment in just a few clicks.
+          <p class="mt-4 max-w-xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+            Discover nearby salons, compare services and prices, and book your next appointment in just a few simple steps.
           </p>
 
-          <div id="find-salon"
-              class="mx-auto mt-5 max-w-xl rounded-xl border border-gray-200 bg-white p-4 text-left shadow-sm lg:mx-0">
+          <!-- Search card -->
+          <div id="find-salon" class="mt-6 rounded-3xl border border-violet-200 bg-white/95 p-5 shadow-xl sm:p-7">
+            <h2 class="text-xl font-extrabold text-slate-950">
+              <span class="mr-2 text-violet-600">⌖</span>
+              Find your perfect salon
+            </h2>
 
-            <h2 class="mb-3 text-base font-bold">Find your perfect salon</h2>
+            <p class="mt-2 text-sm text-slate-500">
+              Enter your location to discover salons near you.
+            </p>
 
-            <%= form_with url: search_salons_path, method: :get,
-                class: "space-y-3" do |form| %>
-
+            <%= form_with url: search_salons_path, method: :get, class: "mt-5 space-y-4" do |form| %>
               <div>
                 <%= form.label :city, "City",
-                    class: "mb-1 block text-sm font-medium" %>
+                    class: "mb-1.5 block text-sm font-bold text-slate-800" %>
 
                 <%= form.text_field :city,
                     placeholder: "e.g. Lucknow",
                     value: params[:city],
-                    class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" %>
+                    class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-100" %>
               </div>
 
               <div>
                 <%= form.label :pincode, "PIN Code",
-                    class: "mb-1 block text-sm font-medium" %>
+                    class: "mb-1.5 block text-sm font-bold text-slate-800" %>
 
                 <%= form.text_field :pincode,
-                    placeholder: "Enter PIN code",
+                    placeholder: "Enter 6-digit PIN code",
                     value: params[:pincode],
                     maxlength: 6,
-                    class: "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" %>
+                    inputmode: "numeric",
+                    class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-100" %>
               </div>
 
-              <%= form.submit "Search Salons",
-                  class: "w-full cursor-pointer rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700" %>
+              <%= form.submit "⌕  Search Salons",
+                  class: "w-full cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:from-violet-700 hover:to-purple-600" %>
             <% end %>
 
-            <p class="mt-2 text-xs text-gray-500">
-              Search salons by city or PIN code.
+            <p class="mt-3 text-xs text-slate-500">
+              <span class="mr-1 text-violet-500">ⓘ</span>
+              Search by city or PIN code to find nearby salons.
             </p>
           </div>
 
-          <%= link_to "Explore Services",
-              root_path(anchor: "services"),
-              class: "mt-3 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-800" %>
+          <div class="mt-4 flex flex-wrap gap-5 text-sm font-semibold">
+            <%= link_to "Explore Services →", root_path(anchor: "services"),
+                class: "text-violet-700 transition hover:text-violet-900" %>
+
+            <%= link_to "How It Works →", root_path(anchor: "how-it-works"),
+                class: "text-slate-700 transition hover:text-violet-700" %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <!-- Statistics Section -->
+    <section class="mx-auto my-10 w-full rounded-3xl border border-gray-300 bg-white px-6 py-8 shadow-lg sm:px-10 lg:px-12">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+
+        <!-- Happy Customers -->
+        <div class="flex items-center justify-center gap-4">
+          <span class="text-4xl text-purple-600">♙</span>
+          <div>
+            <p class="text-2xl font-bold text-gray-900">10,000+</p>
+            <p class="text-sm text-gray-500">Happy Customers</p>
+          </div>
+        </div>
+
+        <!-- Partner Salons -->
+        <div class="flex items-center justify-center gap-4">
+          <span class="text-4xl text-purple-600">▤</span>
+          <div>
+            <p class="text-2xl font-bold text-gray-900">500+</p>
+            <p class="text-sm text-gray-500">Partner Salons</p>
+          </div>
+        </div>
+
+        <!-- Services Available -->
+        <div class="flex items-center justify-center gap-4">
+          <span class="text-4xl">✂️</span>
+          <div>
+            <p class="text-2xl font-bold text-gray-900">50+</p>
+            <p class="text-sm text-gray-500">Services Available</p>
+          </div>
+        </div>
+
+        <!-- Average Rating -->
+        <div class="flex items-center justify-center gap-4">
+          <span class="text-4xl text-purple-600">☆</span>
+          <div>
+            <p class="text-2xl font-bold text-gray-900">4.8</p>
+            <p class="text-sm text-gray-500">Average Rating</p>
+          </div>
         </div>
 
       </div>
     </section>
 
-    <section id="services" class="bg-white py-16">
-      <div class="mx-auto max-w-7xl px-6">
-        <h2 class="text-center text-3xl font-bold">Services for your style</h2>
+    <!-- POPULAR SERVICES -->
+    <section class="popular-services-section mx-auto w-full px-5 py-12 sm:px-8 lg:px-10">
+      <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="mb-2 text-sm font-bold uppercase tracking-wider text-violet-600">
+            Find Your Look
+          </p>
 
-        <p class="mt-3 text-center text-gray-600">
-          Choose the service you need.
-        </p>
+          <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            Our Popular <span class="text-violet-600">Services</span>
+          </h2>
 
-        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <% [
-            ["Haircut", "A fresh look for every occasion"],
-            ["Beard Trim", "Keep your beard sharp and neat"],
-            ["Shaving", "Enjoy a clean, classic shave"],
-            ["Hair Colouring", "Try a new colour and style"]
-          ].each do |name, description| %>
-            <div class="rounded-xl border border-gray-200 p-6 transition hover:border-indigo-300 hover:shadow-md">
-              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-50 text-xl text-indigo-600">
-                ✂
+          <p class="mt-3 max-w-2xl text-base text-gray-600 sm:text-lg">
+            From a fresh haircut to a complete style refresh, find the service that suits you.
+          </p>
+        </div>
+
+        <%= link_to "View All Services →", search_salons_path,
+            class: "inline-flex shrink-0 items-center justify-center rounded-full border border-violet-500 px-6 py-3 text-sm font-bold text-violet-700 transition duration-300 hover:bg-violet-600 hover:text-white" %>
+      </div>
+
+      <% popular_services = [
+        {
+          name: "Haircut & Styling",
+          description: "Get a fresh, modern haircut styled just the way you like.",
+          price: "₹200",
+          image: "/images/services/haircut_styling.jpg"
+        },
+        {
+          name: "Beard Styling",
+          description: "Professional beard trimming, shaping, and a clean finish.",
+          price: "₹100",
+          image: "/images/services/beard-grooming.jpg"
+        },
+        {
+          name: "Ayurvedic Hair Spa",
+          description: "Relax with a nourishing scalp massage and hair treatment.",
+          price: "₹500",
+          image: "/images/services/beard-trim.jpg"
+        },
+        {
+          name: "Hair Coloring",
+          description: "Refresh your look with a new shade and professional finish.",
+          price: "₹800",
+          image: "/images/services/hero-barber.png"
+        }
+      ] %>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <% popular_services.each do |service| %>
+          <article class="popular-service-card group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:shadow-xl">
+
+            <div class="popular-service-image-wrapper">
+              <%= image_tag service[:image],
+                  alt: service[:name],
+                  loading: "lazy",
+                  class: "popular-service-image" %>
+            </div>
+
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="text-lg font-bold text-gray-900 transition group-hover:text-violet-700">
+                <%= service[:name] %>
+              </h3>
+
+              <p class="mt-2 flex-1 text-sm leading-6 text-gray-600">
+                <%= service[:description] %>
+              </p>
+
+              <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+                <div>
+                  <p class="text-xs text-gray-500">Starting from</p>
+                  <p class="mt-1 text-xl font-extrabold text-violet-600">
+                    <%= service[:price] %>
+                  </p>
+                </div>
               </div>
 
-              <h3 class="text-lg font-bold"><%= name %></h3>
-
-              <p class="mt-2 text-sm leading-6 text-gray-600">
-                <%= description %>
-              </p>
+              <%= link_to "Find a Salon →", search_salons_path,
+                  class: "mt-4 flex w-full items-center justify-center rounded-xl border border-violet-500 px-4 py-3 text-sm font-bold text-violet-700 transition duration-300 hover:bg-violet-600 hover:text-white" %>
             </div>
-          <% end %>
-        </div>
+          </article>
+        <% end %>
       </div>
     </section>
 
-    <section id="how-it-works" class="mx-auto max-w-7xl px-6 py-16">
-      <h2 class="text-center text-3xl font-bold">Book in three simple steps</h2>
+    <!-- WHY CHOOSE NEARME SALON -->
+    <section class="why-nearme-section">
+      <div class="why-nearme-container">
 
-      <div class="mt-10 grid gap-8 text-center md:grid-cols-3">
-        <div class="rounded-xl bg-white p-6 shadow-sm">
-          <p class="text-2xl font-bold text-indigo-600">01</p>
-          <h3 class="mt-3 font-bold">Find a salon</h3>
-          <p class="mt-2 text-sm text-gray-600">
-            Explore salons in your area.
-          </p>
+        <!-- Left: Salon Image -->
+        <div class="why-nearme-image">
+          <%= image_tag "/images/services/hero-barber.png",
+              alt: "Professional barber providing salon services",
+              loading: "lazy" %>
+
+          <div class="why-nearme-image-badge">
+            <span class="why-nearme-badge-icon">✦</span>
+            <div>
+              <strong>Look Good, Feel Great</strong>
+              <p>Your style, our priority</p>
+            </div>
+          </div>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow-sm">
-          <p class="text-2xl font-bold text-indigo-600">02</p>
-          <h3 class="mt-3 font-bold">Choose a time</h3>
-          <p class="mt-2 text-sm text-gray-600">
-            Select your service and appointment slot.
+        <!-- Right: Content -->
+        <div class="why-nearme-content">
+          <p class="why-nearme-eyebrow">THE NEARME ADVANTAGE</p>
+
+          <h2>
+            Why Book with
+            <span>NearMe Salon?</span>
+          </h2>
+
+          <p class="why-nearme-intro">
+            Finding your perfect salon shouldn't be complicated.
+            Discover trusted salons, compare services, and book your
+            next appointment with just a few clicks.
           </p>
+
+          <div class="why-nearme-benefits">
+
+            <div class="why-nearme-benefit">
+              <div class="why-nearme-icon">✂</div>
+              <div>
+                <h3>Trusted Local Salons</h3>
+                <p>Discover salons and grooming professionals near you.</p>
+              </div>
+            </div>
+
+            <div class="why-nearme-benefit">
+              <div class="why-nearme-icon">◷</div>
+              <div>
+                <h3>Easy Online Booking</h3>
+                <p>Book your preferred service at a time that suits you.</p>
+              </div>
+            </div>
+
+            <div class="why-nearme-benefit">
+              <div class="why-nearme-icon">₹</div>
+              <div>
+                <h3>Services for Every Budget</h3>
+                <p>Explore services and prices before choosing a salon.</p>
+              </div>
+            </div>
+
+            <div class="why-nearme-benefit">
+              <div class="why-nearme-icon">♡</div>
+              <div>
+                <h3>A Better Salon Experience</h3>
+                <p>Spend less time searching and more time feeling great.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <%= link_to "Find Your Salon →", search_salons_path,
+              class: "why-nearme-button" %>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow-sm">
-          <p class="text-2xl font-bold text-indigo-600">03</p>
-          <h3 class="mt-3 font-bold">Get confirmed</h3>
-          <p class="mt-2 text-sm text-gray-600">
-            Receive your appointment confirmation.
-          </p>
-        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="mx-auto max-w-[1240px] px-5 py-12 sm:px-8 lg:py-14">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-violet-600">— How It Works —</p>
+        <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+          Book in Three <span class="text-violet-600">Simple Steps</span>
+        </h2>
+        <p class="mt-2 text-sm text-slate-600 sm:text-base">
+          Your next salon appointment is only a few clicks away.
+        </p>
+      </div>
+
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <% [
+          ["01", "⌂", "Find a Salon", "Search salons by city or PIN code and explore available services."],
+          ["02", "▦", "Choose Your Service", "Compare prices and choose a suitable appointment time."],
+          ["03", "✓", "Get Confirmed", "Follow your booking status and get ready for your appointment."]
+        ].each do |number, icon, title, description| %>
+          <div class="flex items-start gap-4 rounded-2xl border border-violet-100 bg-white p-5 shadow-sm transition hover:border-violet-300 hover:shadow-md">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-2xl font-bold text-violet-600">
+              <%= icon %>
+            </span>
+
+            <div class="min-w-0">
+              <span class="inline-flex rounded-full border border-violet-300 px-2.5 py-0.5 text-xs font-bold text-violet-700">
+                <%= number %>
+              </span>
+              <h3 class="mt-2 font-extrabold text-slate-950"><%= title %></h3>
+              <p class="mt-2 text-sm leading-6 text-slate-600"><%= description %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mt-8 text-center">
+        <%= link_to "Find a Salon →", search_salons_path,
+            class: "inline-flex items-center justify-center rounded-xl bg-violet-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:bg-violet-700" %>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-gray-200 bg-white px-6 py-8 text-center text-sm text-gray-500">
-    © <%= Date.current.year %> NearMe Salon. Find your style, book with ease.
-  </footer>
 </div>
