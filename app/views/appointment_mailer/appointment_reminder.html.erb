@@ -1,0 +1,32 @@
+<h1>Appointment Reminder</h1>
+
+<p>Hello <%= @customer.name %>,</p>
+
+<p>This is a friendly reminder that your salon appointment is coming up in approximately 30 minutes.</p>
+
+<h2>Appointment Details</h2>
+
+<ul>
+  <li>
+    <strong>Salon:</strong>
+    <%= @salon.name %>
+  </li>
+  <li>
+    <strong>Service:</strong>
+    <%= @appointment.booked_services.map(&:name).presence&.join(", ") || @appointment.service.name %>
+  </li>
+  <li>
+    <strong>Date and Time:</strong>
+    <%= @appointment.appointment_at.strftime("%d %B %Y at %I:%M %p") %>
+  </li>
+  <li>
+    <strong>Status:</strong>
+    <%= @appointment.status.humanize %>
+  </li>
+</ul>
+
+<p>Please arrive on time for your appointment.</p>
+
+<p>Thank you for choosing NearMe Salon!</p>
+
+<p>NearMe Salon Team</p>

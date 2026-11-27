@@ -1,4 +1,6 @@
 class SalonOwner::StaffMembersController < SalonOwner::BaseController
+  before_action :set_salon
+
   before_action :set_staff_member, only: [
     :edit,
     :update,
@@ -8,18 +10,19 @@ class SalonOwner::StaffMembersController < SalonOwner::BaseController
   ]
 
   def index
-    @staff_members = current_salon.staff_members.order(:name)
+    @staff_members = @salon.staff_members.order(:name)
   end
 
   def new
-    @staff_member = current_salon.staff_members.build
+    @staff_member = @salon.staff_members.build
   end
 
   def create
-    @staff_member = current_salon.staff_members.build(staff_member_params)
+    @staff_member = @salon.staff_members.build(staff_member_params)
 
     if @staff_member.save
-      redirect_to salon_owner_staff_members_path, notice: "Staff member added successfully."
+      redirect_to salon_owner_salon_staff_members_path(@salon),
+                  notice: "Staff member added successfully."
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,7 +33,8 @@ class SalonOwner::StaffMembersController < SalonOwner::BaseController
 
   def update
     if @staff_member.update(staff_member_params)
-      redirect_to salon_owner_staff_members_path, notice: "Staff member updated successfully."
+      redirect_to salon_owner_salon_staff_members_path(@salon),
+                  notice: "Staff member updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -39,7 +43,8 @@ class SalonOwner::StaffMembersController < SalonOwner::BaseController
   def destroy
     @staff_member.update!(active: false)
 
-    redirect_to salon_owner_staff_members_path, notice: "Staff member deactivated successfully."
+    redirect_to salon_owner_salon_staff_members_path(@salon),
+                notice: "Staff member deactivated successfully."
   end
 
   def working_hours
@@ -82,8 +87,10 @@ class SalonOwner::StaffMembersController < SalonOwner::BaseController
       end
     end
 
-    redirect_to working_hours_salon_owner_staff_member_path(@staff_member),
-                notice: "Working hours saved successfully."
+    redirect_to working_hours_salon_owner_salon_staff_member_path(
+      @salon,
+      @staff_member
+    ), notice: "Working hours saved successfully."
   rescue ActiveRecord::RecordInvalid => e
     @working_hours = (0..6).map do |day|
       @staff_member.staff_working_hours.find_or_initialize_by(day_of_week: day)
@@ -97,16 +104,15 @@ class SalonOwner::StaffMembersController < SalonOwner::BaseController
 
   private
 
-  def current_salon
-    @current_salon ||= current_user.salons.first ||
-      raise(ActiveRecord::RecordNotFound, "No salon is associated with this account.")
+  def set_salon
+    @salon = current_user.salons.find(params[:salon_id])
   end
 
   def set_staff_member
-    @staff_member = current_salon.staff_members.find(params[:id])
+    @staff_member = @salon.staff_members.find(params[:id])
   end
 
   def staff_member_params
-    params.require(:staff_member).permit(:name, :phone, :active)
+    params.require(:staff_member).permit(:name, :phone, :email, :active)
   end
 end

@@ -47,6 +47,8 @@
     <% if @salons.any? %>
       <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         <% @salons.each do |salon| %>
+          <% active_staff_count = salon.staff_members.count(&:active?) %>
+          <% total_staff_count = salon.staff_members.size %>
           <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
             <div class="h-1.5 bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
@@ -92,11 +94,69 @@
                 </p>
               </div>
 
-              <div class="mb-5 rounded-xl bg-violet-50 p-3">
-                <p class="text-sm text-slate-600">Total Services</p>
-                <p class="mt-1 text-2xl font-bold text-slate-900">
-                  <%= salon.services.size %>
-                </p>
+              <div class="mb-3 rounded-xl bg-violet-50 p-3">
+                <%= link_to salon_services_path(salon),
+                    class: "mb-3 block rounded-xl bg-violet-50 p-3 transition hover:bg-violet-100" do %>
+                  <p class="text-sm text-slate-600">Total Services</p>
+                  <p class="mt-1 text-2xl font-bold text-slate-900">
+                    <%= salon.services.size %>
+                  </p>
+                  <p class="mt-1 text-xs font-medium text-violet-700">
+                    Click to view services →
+                  </p>
+                <% end %>
+              </div>
+
+              <!-- Appointment Count -->
+              <% appointment_count = salon.appointments.size %>
+                <%= link_to salon_owner_appointments_path(salon_id: salon.id),
+                    class: "mb-5 block rounded-xl bg-blue-50 p-3 transition hover:bg-blue-100" do %>
+
+                  <div class="flex items-center justify-between">
+                    <p class="text-sm text-slate-600">Total Appointments</p>
+
+                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                      View Records
+                    </span>
+                  </div>
+
+                  <p class="mt-1 text-2xl font-bold text-slate-900">
+                    <%= appointment_count %>
+                  </p>
+
+                  <p class="mt-1 text-xs font-medium text-blue-700">
+                    Click to view this salon's appointments →
+                  </p>
+                <% end %>
+
+              <!-- Staff Count -->
+              <div class="mb-5 rounded-xl bg-emerald-50 p-3">
+                <%= link_to salon_owner_salon_staff_members_path(salon),
+                  class: "mb-5 block rounded-xl bg-emerald-50 p-3 transition hover:bg-emerald-100" do %>
+                  <div class="flex items-center justify-between">
+                    <p class="text-sm text-slate-600">Active Staff Members</p>
+
+                    <span class="rounded-full px-3 py-1 text-xs font-semibold
+                      <%= active_staff_count >= 3 ?
+                        'bg-emerald-100 text-emerald-700' :
+                        'bg-amber-100 text-amber-700' %>">
+                      <%= active_staff_count %>/3
+                    </span>
+                  </div>
+
+                  <p class="mt-1 text-2xl font-bold text-slate-900">
+                    <%= active_staff_count %>
+                  </p>
+
+                  <p class="mt-1 text-xs text-slate-500">
+                    <%= total_staff_count %> staff registered ·
+                    <%= [3 - active_staff_count, 0].max %> more recommended
+                  </p>
+
+                  <p class="mt-1 text-xs font-medium text-emerald-700">
+                    Click to manage staff →
+                  </p>
+                <% end %>
               </div>
 
               <div class="flex flex-col gap-2">
@@ -108,6 +168,12 @@
 
                 <%= link_to "Add Service", new_salon_service_path(salon),
                     class: "rounded-lg bg-violet-600 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-violet-700" %>
+
+                <%= link_to "Manage Staff (#{active_staff_count})",
+                    salon_owner_salon_staff_members_path(salon),
+                    class: "rounded-lg bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-700" %>
+
+                <%= link_to "View Appointments (#{appointment_count})", salon_owner_appointments_path(salon_id: salon.id), class: "rounded-lg border border-blue-200 px-4 py-2.5 text-center text-sm font-semibold text-blue-700 transition hover:bg-blue-50" %>
               </div>
             </div>
           </div>

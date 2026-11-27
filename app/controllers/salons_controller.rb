@@ -9,7 +9,9 @@ class SalonsController < ApplicationController
 
   # Display only the current owner's salons.
   def index
-    @salons = current_user.salons.order(created_at: :desc)
+    @salons = current_user.salons
+                        .includes(:services, :staff_members, :appointments)
+                        .order(created_at: :desc)
   end
 
   # Display the form for a new salon.

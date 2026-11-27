@@ -1,0 +1,20 @@
+<h1>Upcoming Appointment Reminder</h1>
+
+<p>Hello <%= @staff_member.name %>,</p>
+
+<p>You have an appointment starting in approximately 5 minutes.</p>
+
+<h2>Appointment Details</h2>
+
+<ul>
+  <li><strong>Customer:</strong> <%= @customer.name %></li>
+  <li><strong>Customer Phone:</strong> <%= @customer.phone %></li>
+  <li><strong>Salon:</strong> <%= @salon.name %></li>
+  <li><strong>Services:</strong> <%= @appointment.booked_services.map(&:name).presence&.join(", ") || @appointment.service.name %></li>
+  <li><strong>Date and Time:</strong> <%= @appointment.appointment_at.strftime("%d %B %Y at %I:%M %p") %></li>
+  <li><strong>Status:</strong> <%= @appointment.status.humanize %></li>
+</ul>
+
+<p>Please be ready for the appointment.</p>
+
+<p>NearMe Salon Team</p>
