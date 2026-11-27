@@ -8,6 +8,17 @@ class SalonOwner::AppointmentsController < ApplicationController
       .includes(:salon, :service, :user, :staff_member, appointment_services: :service)
       .order(appointment_at: :desc)
 
+    # Salons available to the logged-in owner.
+    @owner_salons = current_user.salons.order(:name)
+
+    # Filter appointments by a selected salon.
+    if params[:salon_id].present?
+      @selected_salon = @owner_salons.find(params[:salon_id])
+
+      @appointments = @appointments.where(
+        salons: { id: @selected_salon.id }
+      )
+    end
     # Search by customer email, salon name, or service name.
     if params[:q].present?
       search_term = "%#{Appointment.sanitize_sql_like(params[:q].strip)}%"
@@ -81,8 +92,23 @@ class SalonOwner::AppointmentsController < ApplicationController
       return
     end
 
-    @appointment.update!(status: "confirmed")
-    AppointmentMailer.appointment_approved(@appointment).deliver_later
+    if @appointment.update!(status: "confirmed")
+      AppointmentMailer.appointment_approved(@appointment).deliver_later
+
+      reminder_time = @appointment.appointment_at - 30.minutes
+
+      if reminder_time > Time.current
+        AppointmentReminderJob.set(wait_until: reminder_time).perform_later(@appointment.id)
+      end
+    end
+
+    staff_reminder_time = @appointment.appointment_at - 5.minutes
+
+    if @appointment.staff_member_id.present? && staff_reminder_time > Time.current
+
+      StaffAppointmentReminderJob.set(wait_until: staff_reminder_time).perform_later(@appointment.id, @appointment.staff_member_id)
+    end
+
     redirect_to salon_owner_appointment_path(@appointment), notice: "Appointment confirmed successfully."
   end
 

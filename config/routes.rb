@@ -60,10 +60,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :staff_members, except: [ :show ] do
-      member do
-        get :working_hours
-        patch :update_working_hours
+    resources :salons, only: [] do
+      resources :staff_members, except: [:show] do
+        member do
+          get :working_hours
+          patch :update_working_hours
+        end
       end
     end
   end

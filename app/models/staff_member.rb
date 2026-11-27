@@ -5,7 +5,9 @@ class StaffMember < ApplicationRecord
   has_many :appointments, dependent: :nullify
 
   validates :name, presence: true
-  validates :active, inclusion: { in: [true, false] }
+  validates :active, inclusion: { in: [ true, false ] }
+
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   def available_for?(start_time, duration_minutes)
     return false unless active?

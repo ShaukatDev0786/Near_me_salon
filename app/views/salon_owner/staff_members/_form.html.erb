@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <%= form_with model: [:salon_owner, @staff_member], class: "space-y-5" do |f| %>
+<%= form_with model: [:salon_owner, @salon, @staff_member], class: "space-y-5" do |f| %>
     <div>
       <%= f.label :name, "Staff Name", class: "mb-1 block font-medium" %>
       <%= f.text_field :name,
@@ -22,6 +22,12 @@
     <div>
       <%= f.label :phone, "Phone Number", class: "mb-1 block font-medium" %>
       <%= f.telephone_field :phone,
+          class: "w-full rounded-lg border border-gray-300 px-4 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :email, "Email Address", class: "mb-1 block font-medium" %>
+      <%= f.email_field :email,
           class: "w-full rounded-lg border border-gray-300 px-4 py-2" %>
     </div>
 
@@ -36,7 +42,7 @@
       <%= f.submit class: "rounded-lg bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700" %>
 
       <%= link_to "Back",
-          salon_owner_staff_members_path,
+          salon_owner_salon_staff_members_path(@salon),
           class: "rounded-lg border px-5 py-2 hover:bg-gray-50" %>
     </div>
   <% end %>

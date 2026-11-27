@@ -36,4 +36,27 @@ class AppointmentMailer < ApplicationMailer
       subject: "Appointment Cancelled - NearMe Salon"
     )
   end
+
+  def appointment_reminder(appointment)
+    @appointment = appointment
+    @customer = appointment.user
+    @salon = appointment.salon
+
+    mail(
+      to: @customer.email,
+      subject: "Appointment Reminder - NearMe Salon"
+    )
+  end
+
+  def staff_appointment_reminder(appointment)
+    @appointment = appointment
+    @customer = appointment.user
+    @salon = appointment.salon
+    @staff_member = appointment.staff_member
+
+    mail(
+      to: @staff_member.email,
+      subject: "Upcoming Appointment Reminder - NearMe Salon"
+    )
+  end
 end
